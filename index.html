@@ -213,6 +213,30 @@
   @media (min-width: 400px){
     .hero-h1{ font-size: 2.6rem; }
   }
+
+  /* Animated gradient bars background */
+  .gradient-bars-bg{
+    position: absolute; inset: 0; z-index: 0; overflow: hidden;
+    display: flex;
+  }
+  .gradient-bars-bg .bar{
+    flex: 1 0 auto;
+    height: 100%;
+    transform-origin: bottom;
+    transform: scaleY(var(--h));
+    background: linear-gradient(to top, var(--accent) 0%, var(--accent-bright) 45%, #ff8fa3 75%, transparent 96%);
+    filter: saturate(1.3);
+    animation: pulseBar var(--dur, 2.4s) ease-in-out infinite alternate;
+    animation-delay: var(--delay, 0s);
+    will-change: transform;
+  }
+  @keyframes pulseBar{
+    0%{ transform: scaleY(var(--h)); opacity: 0.92; }
+    100%{ transform: scaleY(calc(var(--h) * 0.6)); opacity: 1; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .gradient-bars-bg .bar{ animation: none; }
+  }
   .page-stat-row{ display: flex; flex-direction: column; gap: 2px; }
   @media (min-width: 420px){
     .page-stat-row{ flex-direction: row; align-items: center; justify-content: space-between; gap: 8px; }
@@ -968,7 +992,8 @@
 <section class="relative bg-[var(--bg)] py-20 md:py-28">
   <div class="max-w-[1400px] mx-auto px-6 md:px-10">
     <div class="surface rounded-2xl px-8 py-14 md:px-16 md:py-20 text-center reveal relative overflow-hidden">
-      <div class="absolute inset-0 mesh-hero opacity-70"></div>
+      <div class="gradient-bars-bg" aria-hidden="true"></div>
+      <div class="absolute inset-0 z-[1]" style="background:radial-gradient(ellipse at center, rgba(5,5,5,0.32) 0%, rgba(5,5,5,0.68) 55%, rgba(5,5,5,0.88) 100%);"></div>
       <div class="relative z-10">
         <p class="font-display italic text-2xl md:text-4xl text-white max-w-2xl mx-auto leading-snug">
           Заработок&nbsp;стартует от&nbsp;<span class="text-[var(--accent)] not-italic">$2 000</span>, и&nbsp;верхнего предела&nbsp;просто не&nbsp;существует.
@@ -991,10 +1016,10 @@
         <span class="eyebrow">Кто мы?</span>
         <h2 class="font-display text-3xl md:text-[2.6rem] leading-[1.1] tracking-[-0.02em] text-white mt-6">Ваш успех — наша приоритетная цель</h2>
         <p class="text-[var(--text-muted)] leading-relaxed mt-6">
-          Агентство Diva Models основано в 2021 году. За это время мы сформировали сильную команду экспертов, которая профессионально занимается поиском, подготовкой и запуском моделей в работу.
+          Агентство Diva Models основано в <span class="text-white font-semibold">2021 году</span>. За это время мы сформировали <span class="text-white font-semibold">сильную команду экспертов</span>, которая профессионально занимается поиском, подготовкой и запуском моделей в работу.
         </p>
         <p class="text-[var(--text-muted)] leading-relaxed mt-4">
-          Мы заключили прямые контракты с лучшими командами Украины и Европы, которые находятся в постоянном поиске новых талантов. Наша база — это не список агентств, а отобранные лидеры индустрии.
+          Мы заключили <span class="text-white font-semibold">прямые контракты с лучшими командами Украины и Европы</span>, которые находятся в постоянном поиске новых талантов. Наша база — это не список агентств, а <span class="text-white font-semibold">отобранные лидеры индустрии</span>.
         </p>
         <div class="mt-10 grid grid-cols-3 gap-6">
           <div>
@@ -1402,12 +1427,6 @@
         <span class="btn-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 9.5L9.5 2.5M9.5 2.5H4M9.5 2.5V8" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </a>
     </div>
-
-    <div class="reveal reveal-delay-4 mt-16 pt-10 border-t border-[var(--border-soft)] max-w-md mx-auto">
-      <div class="text-xs uppercase tracking-[0.1em] text-[var(--text-dim)] font-semibold mb-3">Контакты</div>
-      <div class="font-display text-xl text-white">t.me/divareviewsss</div>
-      <p class="text-[var(--text-dim)] text-xs mt-3 leading-relaxed">Работаем только с кандидатами 18+. Полная конфиденциальность на каждом этапе&nbsp;сотрудничества.</p>
-    </div>
   </div>
 </section>
 
@@ -1480,6 +1499,23 @@
       touchResume = setTimeout(() => testimonialTrack.classList.remove('paused'), 2500);
     }, { passive: true });
   }
+
+  // Animated gradient bars background
+  document.querySelectorAll('.gradient-bars-bg').forEach(container => {
+    const numBars = window.innerWidth < 640 ? 9 : 15;
+    for (let i = 0; i < numBars; i++) {
+      const position = i / (numBars - 1);
+      const distanceFromCenter = Math.abs(position - 0.5);
+      const heightPct = Math.pow(distanceFromCenter * 2, 1.2);
+      const height = (30 + (100 - 30) * heightPct) / 100;
+      const bar = document.createElement('div');
+      bar.className = 'bar';
+      bar.style.setProperty('--h', height.toFixed(3));
+      bar.style.setProperty('--delay', (i * 0.1).toFixed(2) + 's');
+      bar.style.setProperty('--dur', (2 + Math.random() * 0.8).toFixed(2) + 's');
+      container.appendChild(bar);
+    }
+  });
 
   // Scroll reveal
   const revealEls = document.querySelectorAll('.reveal');
