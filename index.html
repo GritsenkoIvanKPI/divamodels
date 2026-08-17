@@ -248,6 +248,34 @@
     .cta-copy h2, .cta-copy p, .cta-copy .eyebrow{ text-shadow: none; }
   }
 
+  /* About band: same full-bleed treatment as the CTA, framed for a photo
+     whose subjects sit right of centre so the copy keeps the dark left side. */
+  .about-media img{ object-position: 58% 38%; }
+  .about-scrim{
+    position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background: linear-gradient(182deg,
+      rgba(5,5,5,0.30) 0%,
+      rgba(5,5,5,0.80) 16%,
+      rgba(5,5,5,0.88) 60%,
+      rgba(5,5,5,0.74) 88%,
+      rgba(5,5,5,0.44) 100%);
+  }
+  .about-copy h2, .about-copy p, .about-copy .eyebrow, .about-copy .stat-trio{
+    text-shadow: 0 1px 18px rgba(5,5,5,0.65);
+  }
+  @media (min-width: 768px){
+    .about-media img{ object-position: 50% 26%; }
+    .about-scrim{
+      background:
+        linear-gradient(90deg,
+          rgba(5,5,5,0.94) 0%,
+          rgba(5,5,5,0.86) 38%,
+          rgba(5,5,5,0.52) 68%,
+          rgba(5,5,5,0.72) 100%);
+    }
+    .about-copy h2, .about-copy p, .about-copy .eyebrow, .about-copy .stat-trio{ text-shadow: none; }
+  }
+
   /* Radial mesh backgrounds */
   .mesh-hero{
     background:
@@ -467,7 +495,14 @@
     width: max-content;
     animation: testimonial-marquee 70s linear infinite;
   }
-  .testimonial-viewport:hover .testimonial-track,
+  /* Hover-to-pause only where a real pointer exists — on touch screens a tap
+     leaves :hover stuck on, which would freeze the strip after you let go.
+     Touch devices use the .paused class from the hold handler instead. */
+  @media (hover: hover) and (pointer: fine){
+    .testimonial-viewport:hover .testimonial-track{
+      animation-play-state: paused;
+    }
+  }
   .testimonial-track.paused{
     animation-play-state: paused;
   }
@@ -645,7 +680,13 @@
 
 <!-- ================= HERO ================= -->
 <section class="relative h-[92vh] sm:h-[88vh] min-h-[660px] max-h-[880px] w-full overflow-hidden bg-[var(--bg)]">
-  <img src="images/hero-portrait-v2.png" alt="Модель показывает статистику заработка в приложении DIVA MODELS" class="absolute top-0 left-0 w-full h-[56%] sm:h-[64%] md:h-full object-cover object-[42%_28%] md:object-[center_32%]">
+  <picture>
+    <source type="image/webp" sizes="100vw" srcset="images/hero-1200.webp 1200w, images/hero-1800.webp 1800w, images/hero-2400.webp 2400w">
+    <img src="images/hero-1800.jpg" sizes="100vw" srcset="images/hero-1200.jpg 1200w, images/hero-1800.jpg 1800w, images/hero-2400.jpg 2400w"
+         width="2400" height="1345" fetchpriority="high" decoding="async"
+         alt="Модель показывает статистику заработка в приложении DIVA MODELS"
+         class="absolute top-0 left-0 w-full h-[56%] sm:h-[64%] md:h-full object-cover object-[42%_28%] md:object-[center_32%]">
+  </picture>
   <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(5,5,5,1) 0%, rgba(5,5,5,0.55) 30%, rgba(5,5,5,0.08) 56%, rgba(5,5,5,0.35) 100%);"></div>
   <div class="absolute inset-0" style="background:linear-gradient(115deg, rgba(211,30,61,0.22), transparent 45%);mix-blend-mode:multiply;"></div>
 
@@ -725,7 +766,7 @@
       Условия сотрудничества и&nbsp;обязанности агентства
     </h2>
     <p class="reveal reveal-delay-2 text-left md:text-center text-[var(--text-muted)] max-w-2xl mx-auto mt-6 leading-relaxed">
-      Мы открыли набор в топ-агентства Украины и несколько агентств из Польши и Германии. Заработок моделей стартует от <span class="text-white font-medium">$2 000</span>, и верхнего предела не существует.
+      Набор в топовые агентства Украины и Европы открыт на постоянной основе! Работаем с ведущими платформами, такими как OnlyFans и Fansly. Доход моделей — от <span class="text-white font-medium">$2 000+</span>, и верхнего предела не существует!
     </p>
 
     <div class="cond-stack grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-16">
@@ -886,7 +927,7 @@
             <p class="px-5 text-[var(--text-dim)] text-xs mt-1">Чистыми · июл. 2024 — янв. 2026</p>
             <div class="p-5">
               <div class="case-shot rounded-lg overflow-hidden bg-[#f4f2ee] shadow-[0_20px_40px_-16px_rgba(0,0,0,0.55)]">
-                <img src="images/cases/case1-a.jpg" alt="Статистика заработка, кейс 1, страница A" class="w-full h-auto block" data-lightbox tabindex="0" role="button" aria-label="Открыть скриншот статистики, кейс 1, страница A">
+                <img loading="lazy" decoding="async" src="images/cases/case1-a.jpg" alt="Статистика заработка, кейс 1, страница A" class="w-full h-auto block" data-lightbox tabindex="0" role="button" aria-label="Открыть скриншот статистики, кейс 1, страница A">
               </div>
             </div>
           </div>
@@ -898,7 +939,7 @@
             <p class="px-5 text-[var(--text-dim)] text-xs mt-1">Чистыми · июл. 2024 — янв. 2026</p>
             <div class="p-5">
               <div class="case-shot rounded-lg overflow-hidden bg-[#f4f2ee] shadow-[0_20px_40px_-16px_rgba(0,0,0,0.55)]">
-                <img src="images/cases/case1-b.jpg" alt="Статистика заработка, кейс 1, страница B" class="w-full h-auto block" data-lightbox tabindex="0" role="button" aria-label="Открыть скриншот статистики, кейс 1, страница B">
+                <img loading="lazy" decoding="async" src="images/cases/case1-b.jpg" alt="Статистика заработка, кейс 1, страница B" class="w-full h-auto block" data-lightbox tabindex="0" role="button" aria-label="Открыть скриншот статистики, кейс 1, страница B">
               </div>
             </div>
           </div>
@@ -962,7 +1003,7 @@
             <p class="px-5 text-[var(--text-dim)] text-xs mt-1">Чистыми · июл. 2023 — янв. 2026</p>
             <div class="p-5">
               <div class="case-shot rounded-lg overflow-hidden bg-[#f4f2ee] shadow-[0_20px_40px_-16px_rgba(0,0,0,0.55)]">
-                <img src="images/cases/case2-a.jpg" alt="Статистика заработка, кейс 2, страница A" class="w-full h-auto block" data-lightbox tabindex="0" role="button" aria-label="Открыть скриншот статистики, кейс 2, страница A">
+                <img loading="lazy" decoding="async" src="images/cases/case2-a.jpg" alt="Статистика заработка, кейс 2, страница A" class="w-full h-auto block" data-lightbox tabindex="0" role="button" aria-label="Открыть скриншот статистики, кейс 2, страница A">
               </div>
             </div>
           </div>
@@ -974,7 +1015,7 @@
             <p class="px-5 text-[var(--text-dim)] text-xs mt-1">Чистыми · ноя. 2023 — янв. 2026</p>
             <div class="p-5">
               <div class="case-shot rounded-lg overflow-hidden bg-[#f4f2ee] shadow-[0_20px_40px_-16px_rgba(0,0,0,0.55)]">
-                <img src="images/cases/case2-b.jpg" alt="Статистика заработка, кейс 2, страница B" class="w-full h-auto block" data-lightbox tabindex="0" role="button" aria-label="Открыть скриншот статистики, кейс 2, страница B">
+                <img loading="lazy" decoding="async" src="images/cases/case2-b.jpg" alt="Статистика заработка, кейс 2, страница B" class="w-full h-auto block" data-lightbox tabindex="0" role="button" aria-label="Открыть скриншот статистики, кейс 2, страница B">
               </div>
             </div>
           </div>
@@ -1038,7 +1079,7 @@
             <p class="px-5 text-[var(--text-dim)] text-xs mt-1">Чистыми · дек. 2023 — янв. 2026</p>
             <div class="p-5">
               <div class="case-shot rounded-lg overflow-hidden bg-[#f4f2ee] shadow-[0_20px_40px_-16px_rgba(0,0,0,0.55)]">
-                <img src="images/cases/case3-a.jpg" alt="Статистика заработка, кейс 3, страница A" class="w-full h-auto block" data-lightbox tabindex="0" role="button" aria-label="Открыть скриншот статистики, кейс 3, страница A">
+                <img loading="lazy" decoding="async" src="images/cases/case3-a.jpg" alt="Статистика заработка, кейс 3, страница A" class="w-full h-auto block" data-lightbox tabindex="0" role="button" aria-label="Открыть скриншот статистики, кейс 3, страница A">
               </div>
             </div>
           </div>
@@ -1050,7 +1091,7 @@
             <p class="px-5 text-[var(--text-dim)] text-xs mt-1">Чистыми · фев. 2024 — янв. 2026</p>
             <div class="p-5">
               <div class="case-shot rounded-lg overflow-hidden bg-[#f4f2ee] shadow-[0_20px_40px_-16px_rgba(0,0,0,0.55)]">
-                <img src="images/cases/case3-b.jpg" alt="Статистика заработка, кейс 3, страница B" class="w-full h-auto block" data-lightbox tabindex="0" role="button" aria-label="Открыть скриншот статистики, кейс 3, страница B">
+                <img loading="lazy" decoding="async" src="images/cases/case3-b.jpg" alt="Статистика заработка, кейс 3, страница B" class="w-full h-auto block" data-lightbox tabindex="0" role="button" aria-label="Открыть скриншот статистики, кейс 3, страница B">
               </div>
             </div>
           </div>
@@ -1071,7 +1112,7 @@
 <!-- ================= CTA 1 ================= -->
 <section class="relative py-28 md:py-36 overflow-hidden">
   <div class="absolute inset-0 img-tint cta-media">
-    <img src="images/cta-banner.jpg" alt="" class="w-full h-full object-cover">
+    <img loading="lazy" decoding="async" src="images/cta-banner.jpg" alt="" class="w-full h-full object-cover">
     <div class="cta-scrim"></div>
   </div>
   <div class="max-w-[1400px] mx-auto px-6 md:px-10 relative z-10">
@@ -1102,7 +1143,7 @@
 
     <div class="grid lg:grid-cols-2 gap-10 md:gap-16 items-center mt-16">
       <div class="reveal img-treat img-overlay img-tint rounded-2xl overflow-hidden aspect-[16/11] order-2 lg:order-1">
-        <img src="images/market-of-illusions.jpg" alt="Тёмная схема обмана моделей мошенниками" class="w-full h-full object-cover">
+        <img loading="lazy" decoding="async" src="images/market-of-illusions.jpg" alt="Тёмная схема обмана моделей мошенниками" class="w-full h-full object-cover">
       </div>
 
       <div class="reveal reveal-delay-1 order-1 lg:order-2">
@@ -1219,11 +1260,18 @@
 </section>
 
 <!-- ================= ABOUT ================= -->
-<section id="about" class="relative bg-[var(--bg)] py-24 md:py-32">
-  <div class="max-w-[1400px] mx-auto px-6 md:px-10">
-    <div class="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+<section id="about" class="relative py-24 md:py-32 overflow-hidden bg-[var(--bg)]">
+  <div class="absolute inset-0 img-tint about-media">
+    <picture class="block w-full h-full">
+      <source type="image/webp" srcset="images/about.webp">
+      <img loading="lazy" decoding="async" src="images/about.jpg" alt="" class="w-full h-full object-cover">
+    </picture>
+    <div class="about-scrim" aria-hidden="true"></div>
+  </div>
+  <div class="max-w-[1400px] mx-auto px-6 md:px-10 relative z-10">
+    <div class="max-w-2xl about-copy">
 
-      <div class="lg:col-span-6 reveal">
+      <div class="reveal">
         <span class="eyebrow">Кто мы?</span>
         <h2 class="font-display text-3xl md:text-[2.6rem] leading-[1.1] tracking-[-0.02em] text-white mt-6">Ваш успех — наша приоритетная цель</h2>
         <p class="text-[var(--text-muted)] leading-relaxed mt-6">
@@ -1248,11 +1296,6 @@
         </div>
       </div>
 
-      <div class="lg:col-span-6 reveal reveal-delay-2">
-        <div class="img-treat img-overlay img-tint rounded-2xl overflow-hidden aspect-[4/3] relative">
-          <img src="images/about.jpg" alt="Команда DIVA MODELS за работой" class="w-full h-full object-cover">
-        </div>
-      </div>
     </div>
   </div>
 </section>
@@ -1275,7 +1318,7 @@
 
       <a href="#" class="reveal card-hover surface rounded-2xl overflow-hidden flex flex-col">
         <div class="img-treat img-overlay relative aspect-[4/3]">
-          <img src="images/blog-3.jpg" alt="Фейк-агентства: кто на самом деле тебе пишет?" class="w-full h-full object-cover">
+          <img loading="lazy" decoding="async" src="images/blog-3.jpg" alt="Фейк-агентства: кто на самом деле тебе пишет?" class="w-full h-full object-cover">
         </div>
         <div class="p-7 flex flex-col flex-1">
           <div class="text-xs uppercase tracking-[0.1em] text-[var(--text-dim)] font-semibold mb-3">19 янв 2026</div>
@@ -1287,7 +1330,7 @@
 
       <a href="#" class="reveal reveal-delay-1 card-hover surface rounded-2xl overflow-hidden flex flex-col">
         <div class="img-treat img-overlay relative aspect-[4/3]">
-          <img src="images/blog-2.jpg" alt="Сколько получает модель?" class="w-full h-full object-cover">
+          <img loading="lazy" decoding="async" src="images/blog-2.jpg" alt="Сколько получает модель?" class="w-full h-full object-cover">
         </div>
         <div class="p-7 flex flex-col flex-1">
           <div class="text-xs uppercase tracking-[0.1em] text-[var(--text-dim)] font-semibold mb-3">27 дек 2025</div>
@@ -1299,7 +1342,7 @@
 
       <a href="#" class="reveal reveal-delay-2 card-hover surface rounded-2xl overflow-hidden flex flex-col">
         <div class="img-treat img-overlay relative aspect-[4/3]">
-          <img src="images/blog-1.jpg" alt="Агентство или Соло?" class="w-full h-full object-cover">
+          <img loading="lazy" decoding="async" src="images/blog-1.jpg" alt="Агентство или Соло?" class="w-full h-full object-cover">
         </div>
         <div class="p-7 flex flex-col flex-1">
           <div class="text-xs uppercase tracking-[0.1em] text-[var(--text-dim)] font-semibold mb-3">20 дек 2025</div>
@@ -1776,17 +1819,23 @@
   applyModal.querySelectorAll('[data-modal-dismiss]').forEach(el => el.addEventListener('click', (e) => { if(e.target === e.currentTarget) closeApplyModal(); }));
   window.addEventListener('keydown', (e) => { if(e.key === 'Escape' && applyModal.classList.contains('open')) closeApplyModal(); });
 
-  // Testimonial marquee: pause on touch (hover is handled in CSS)
+  // Testimonial marquee: press and hold to freeze, resume the moment you
+  // let go (hover does the same on desktop, handled in CSS).
+  const testimonialViewport = document.querySelector('.testimonial-viewport');
   const testimonialTrack = document.querySelector('.testimonial-track');
-  if(testimonialTrack){
-    let touchResume;
-    testimonialTrack.addEventListener('touchstart', () => {
-      clearTimeout(touchResume);
-      testimonialTrack.classList.add('paused');
-    }, { passive: true });
-    testimonialTrack.addEventListener('touchend', () => {
-      touchResume = setTimeout(() => testimonialTrack.classList.remove('paused'), 2500);
-    }, { passive: true });
+  if(testimonialViewport && testimonialTrack){
+    const hold = () => testimonialTrack.classList.add('paused');
+    // Only resume once every finger is off — and always resume on cancel,
+    // otherwise a touch the browser takes over would freeze the strip.
+    const release = (e) => {
+      if(!e || !e.touches || e.touches.length === 0) testimonialTrack.classList.remove('paused');
+    };
+    testimonialViewport.addEventListener('touchstart', hold, { passive: true });
+    testimonialViewport.addEventListener('touchend', release, { passive: true });
+    testimonialViewport.addEventListener('touchcancel', release, { passive: true });
+    // Safety net: a backgrounded tab can swallow touchend entirely.
+    window.addEventListener('blur', () => release());
+    document.addEventListener('visibilitychange', () => { if(document.hidden) release(); });
   }
 
   // Animated gradient bars background
