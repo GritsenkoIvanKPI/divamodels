@@ -121,7 +121,7 @@
     <div class="af-group" data-group="age">
       <label class="block text-xs uppercase tracking-[0.08em] font-semibold text-[var(--text-dim)] mb-3">Сколько вам лет?</label>
       <div class="flex gap-2">
-        <button type="button" class="af-pill active" data-value="18-22">18-22</button>
+        <button type="button" class="af-pill" data-value="18-22">18-22</button>
         <button type="button" class="af-pill" data-value="23-26">23-26</button>
         <button type="button" class="af-pill" data-value="26-30">26-30</button>
       </div>
@@ -131,7 +131,7 @@
     <div class="af-group" data-group="experience">
       <label class="block text-xs uppercase tracking-[0.08em] font-semibold text-[var(--text-dim)] mb-3">Ваш опыт на OnlyFans</label>
       <div class="flex gap-2">
-        <button type="button" class="af-pill active" data-value="none">Нет</button>
+        <button type="button" class="af-pill" data-value="none">Нет</button>
         <button type="button" class="af-pill" data-value="model">Модель</button>
         <button type="button" class="af-pill" data-value="operator">Оператор</button>
       </div>
@@ -141,7 +141,7 @@
     <div class="af-group" data-group="taboo18">
       <label class="block text-xs uppercase tracking-[0.08em] font-semibold text-[var(--text-dim)] mb-3">Готовы ли вы снимать контент 18+?</label>
       <div class="flex gap-2">
-        <button type="button" class="af-pill active" data-value="yes">Да</button>
+        <button type="button" class="af-pill" data-value="yes">Да</button>
         <button type="button" class="af-pill" data-value="no">Нет</button>
       </div>
       <div class="af-error">Пожалуйста, выберите вариант.</div>
@@ -195,6 +195,11 @@
     });
   });
 
+  function pickedValue(name){
+    var pill = root.querySelector('[data-group="' + name + '"] .af-pill.active');
+    return pill ? pill.dataset.value : '';
+  }
+
   var form = document.getElementById('af-form');
   var successView = document.getElementById('af-success');
   var formView = document.getElementById('af-form-view');
@@ -208,6 +213,12 @@
       var field = input.closest('.af-field');
       if(!input.value.trim()){ field.classList.add('af-invalid'); valid = false; }
       else{ field.classList.remove('af-invalid'); }
+    });
+
+    // Pill groups start with nothing selected — each one must be answered
+    root.querySelectorAll('.af-group').forEach(function(group){
+      if(!group.querySelector('.af-pill.active')){ group.classList.add('af-invalid'); valid = false; }
+      else{ group.classList.remove('af-invalid'); }
     });
 
     ['af-consent-age', 'af-consent-data'].forEach(function(id){
@@ -228,9 +239,9 @@
       name: document.getElementById('af-name').value.trim(),
       phone: document.getElementById('af-phone').value.trim(),
       telegram: document.getElementById('af-telegram').value.trim(),
-      age: root.querySelector('[data-group="age"] .active').dataset.value,
-      experience: root.querySelector('[data-group="experience"] .active').dataset.value,
-      taboo18: root.querySelector('[data-group="taboo18"] .active').dataset.value
+      age: pickedValue('age'),
+      experience: pickedValue('experience'),
+      taboo18: pickedValue('taboo18')
     };
 
     // ============================================================
