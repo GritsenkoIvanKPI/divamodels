@@ -124,6 +124,18 @@
     box-shadow: 0 24px 48px -20px rgba(0,0,0,0.6), 0 0 0 1px rgba(211,30,61,0.12);
   }
 
+  /* Icon + title on one row */
+  .card-head{
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 18px;
+  }
+  .card-head h3{ line-height: 1.2; }
+  .card-icon{
+    width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0;
+    background: var(--accent-dim);
+    display: flex; align-items: center; justify-content: center;
+  }
+
   .tag-pill{
     display: inline-flex; align-items: center; padding: 7px 14px; border-radius: 999px;
     font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
@@ -154,6 +166,35 @@
     background: linear-gradient(160deg, rgba(211,30,61,0.16), transparent 55%);
     mix-blend-mode: multiply;
     pointer-events: none;
+  }
+
+  /* CTA banner: keep the lit part of the room in frame on narrow screens */
+  .cta-media img{
+    object-position: 74% 50%;
+  }
+  .cta-scrim{
+    position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background: linear-gradient(184deg,
+      rgba(5,5,5,0.24) 0%,
+      rgba(5,5,5,0.76) 17%,
+      rgba(5,5,5,0.86) 58%,
+      rgba(5,5,5,0.70) 87%,
+      rgba(5,5,5,0.38) 100%);
+  }
+  .cta-copy h2, .cta-copy p, .cta-copy .eyebrow{
+    text-shadow: 0 1px 18px rgba(5,5,5,0.6);
+  }
+  .cta-copy p{ color: #c6c6cc; }
+  @media (min-width: 1024px){
+    .cta-media img{ object-position: 50% 50%; }
+    .cta-copy p{ color: var(--text-muted); }
+    .cta-scrim{
+      background: linear-gradient(90deg,
+        rgba(5,5,5,0.92) 10%,
+        rgba(5,5,5,0.55) 55%,
+        rgba(5,5,5,0.85) 100%);
+    }
+    .cta-copy h2, .cta-copy p, .cta-copy .eyebrow{ text-shadow: none; }
   }
 
   /* Radial mesh backgrounds */
@@ -215,11 +256,11 @@
   }
 
   .hero-subtext{ font-size: 0.875rem; letter-spacing: -0.01em; }
-  @media (min-width: 480px){
+  @media (min-width: 560px){
     .hero-subtext{ font-size: 1rem; }
   }
   @media (min-width: 768px){
-    .hero-subtext{ font-size: 1.125rem; }
+    .hero-subtext{ font-size: 1.0625rem; }
   }
 
   .stat-trio{ display: grid; grid-template-columns: 1fr; }
@@ -320,6 +361,18 @@
   }
   #image-lightbox.open .lightbox-img{ transform: scale(1); }
 
+  /* Apply modal */
+  #apply-modal{
+    opacity: 0; visibility: hidden; pointer-events: none;
+    transition: opacity 0.35s ease, visibility 0.35s ease;
+  }
+  #apply-modal.open{ opacity: 1; visibility: visible; pointer-events: auto; }
+  #apply-modal .modal-panel{
+    transform: translateY(16px) scale(0.98);
+    transition: transform 0.4s cubic-bezier(.16,.8,.24,1);
+  }
+  #apply-modal.open .modal-panel{ transform: translateY(0) scale(1); }
+
   /* Testimonial marquee */
   .testimonial-viewport{
     overflow: hidden;
@@ -382,7 +435,7 @@
     </nav>
 
     <div class="hidden xl:block">
-      <a href="#contact" class="btn btn-primary">
+      <a href="#contact" data-open-apply class="btn btn-primary">
         Стать моделью
         <span class="btn-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 9.5L9.5 2.5M9.5 2.5H4M9.5 2.5V8" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </a>
@@ -411,7 +464,7 @@
     <a href="#about" class="mobile-link py-3 border-b border-[var(--border-soft)] text-white">О нас</a>
   </nav>
   <div class="px-6 mt-8">
-    <a href="#contact" class="mobile-link btn btn-primary w-full justify-center">Стать моделью</a>
+    <a href="#contact" data-open-apply class="mobile-link btn btn-primary w-full justify-center">Стать моделью</a>
   </div>
 </div>
 
@@ -469,7 +522,7 @@
           <span class="text-xs uppercase tracking-[0.1em] text-[var(--text-muted)] font-semibold">Потенциальный&nbsp;доход в&nbsp;месяц</span>
           <div id="calc-result" class="font-display text-3xl md:text-4xl text-white mt-2 tracking-tight break-words">$2 000 – $2 200</div>
         </div>
-        <a href="#contact" data-modal-close class="btn btn-primary w-full sm:w-auto">
+        <a href="#contact" data-modal-close data-open-apply class="btn btn-primary w-full sm:w-auto">
           Получить оффер
           <span class="btn-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 9.5L9.5 2.5M9.5 2.5H4M9.5 2.5V8" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </a>
@@ -487,6 +540,21 @@
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1 1L15 15M15 1L1 15" stroke="white" stroke-width="1.4" stroke-linecap="round"/></svg>
     </button>
     <img id="lightbox-img" src="" alt="" class="lightbox-img rounded-xl shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8)]">
+  </div>
+</div>
+
+<!-- Apply modal (content injected from apply-form.html) -->
+<div id="apply-modal" class="fixed inset-0 z-[90]" aria-hidden="true">
+  <div class="absolute inset-0 bg-black/85 backdrop-blur-sm" data-modal-dismiss></div>
+  <div class="relative min-h-full flex items-center justify-center p-4 md:p-8" data-modal-dismiss>
+    <div class="modal-panel surface-floating rounded-2xl p-7 md:p-10 w-full max-w-lg max-h-[92vh] overflow-y-auto shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8)] relative">
+      <button type="button" data-modal-close aria-label="Закрыть форму" class="absolute top-5 right-5 md:top-6 md:right-6 w-10 h-10 rounded-full border border-[var(--border)] flex items-center justify-center transition-colors hover:border-white/35 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent)] z-10">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1 1L15 15M15 1L1 15" stroke="white" stroke-width="1.4" stroke-linecap="round"/></svg>
+      </button>
+      <div id="apply-modal-content">
+        <div class="py-20 text-center text-[var(--text-dim)] text-sm">Загрузка формы…</div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -508,11 +576,11 @@
         </h1>
       </div>
       <div class="lg:col-span-5 reveal reveal-delay-2 visible lg:pl-6">
-        <p class="hero-subtext text-white/80 leading-relaxed max-w-[26rem] md:max-w-lg">
-          Помогаем моделям найти надёжное сотрудничество с проверенными OnlyFans-агентствами по всему миру.
+        <p class="hero-subtext text-white/80 leading-relaxed max-w-[29rem] md:max-w-xl">
+          Помогаем моделям найти надёжное сотрудничество с проверенными OnlyFans и Fansly-агентствами по всему миру.
         </p>
         <div class="mt-6 flex flex-col sm:flex-row sm:items-center gap-4">
-          <a href="#contact" class="btn w-full sm:w-auto" style="background:#fff;color:#0a0a0a;box-shadow:0 8px 24px -8px rgba(0,0,0,0.5);">
+          <a href="#contact" data-open-apply class="btn w-full sm:w-auto" style="background:#fff;color:#0a0a0a;box-shadow:0 8px 24px -8px rgba(0,0,0,0.5);">
             Стать моделью
             <span class="btn-arrow" style="background:#0a0a0a;">
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 9.5L9.5 2.5M9.5 2.5H4M9.5 2.5V8" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -542,19 +610,19 @@
 
     <div class="grid sm:grid-cols-3 gap-10 md:gap-16">
       <div class="reveal">
-        <div class="font-display text-5xl md:text-6xl text-white tracking-tight">1000+</div>
+        <div class="font-display text-5xl md:text-6xl text-white tracking-tight"><span class="counter" data-count-to="1000">0</span>+</div>
         <div class="hr-soft mt-6 mb-5"></div>
         <div class="font-semibold text-white mb-1">Трудоустроенных&nbsp;моделей</div>
         <div class="text-[var(--text-muted)] text-sm leading-relaxed">С 2021 года помогли более чем тысяче моделей найти надёжное&nbsp;агентство</div>
       </div>
       <div class="reveal reveal-delay-1">
-        <div class="font-display text-5xl md:text-6xl text-white tracking-tight">700+</div>
+        <div class="font-display text-5xl md:text-6xl text-white tracking-tight"><span class="counter" data-count-to="700">0</span>+</div>
         <div class="hr-soft mt-6 mb-5"></div>
         <div class="font-semibold text-white mb-1">Агентств-партнёров</div>
         <div class="text-[var(--text-muted)] text-sm leading-relaxed">Прямые контракты с&nbsp;проверенными командами Украины и&nbsp;Европы</div>
       </div>
       <div class="reveal reveal-delay-2">
-        <div class="font-display text-5xl md:text-6xl text-white tracking-tight">2021</div>
+        <div class="font-display text-5xl md:text-6xl text-white tracking-tight"><span class="counter" data-count-to="2021">0</span></div>
         <div class="hr-soft mt-6 mb-5"></div>
         <div class="font-semibold text-white mb-1">Год&nbsp;основания</div>
         <div class="text-[var(--text-muted)] text-sm leading-relaxed">Сильная команда экспертов по поиску, подготовке и запуску&nbsp;моделей</div>
@@ -580,74 +648,92 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-16">
 
       <div class="reveal card-hover surface rounded-2xl p-8">
-        <div class="w-11 h-11 rounded-full bg-[var(--accent-dim)] flex items-center justify-center mb-6">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.6"><path d="M17 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2M10 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM22 20v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="card-head">
+          <div class="card-icon">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.6"><path d="M17 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2M10 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM22 20v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3 class="font-display text-xl text-white">Команда</h3>
         </div>
-        <h3 class="font-display text-xl text-white mb-3">Профессиональная&nbsp;команда</h3>
-        <p class="text-[var(--text-muted)] text-sm leading-relaxed">Всесторонняя поддержка, уважительное общение и слаженная работа штата специалистов: чатеры, контент-менеджеры,&nbsp;маркетологи.</p>
+        <p class="text-[var(--text-muted)] text-sm leading-relaxed">Профессиональная команда гарантирует всестороннюю поддержку, уважительное общение и слаженную работу штата специалистов: чатеры, контент-менеджеры,&nbsp;маркетологи.</p>
       </div>
 
       <div class="reveal reveal-delay-1 card-hover surface rounded-2xl p-8">
-        <div class="w-11 h-11 rounded-full bg-[var(--accent-dim)] flex items-center justify-center mb-6">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.6"><path d="M23 6l-9.5 9.5-5-5L1 18" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 6h6v6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="card-head">
+          <div class="card-icon">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.6"><path d="M19 5L5 19M8 8a3 3 0 1 0-6 0 3 3 0 0 0 6 0ZM22 16a3 3 0 1 0-6 0 3 3 0 0 0 6 0Z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3 class="font-display text-xl text-white">Ставка</h3>
         </div>
-        <h3 class="font-display text-xl text-white mb-3">Развитие и трафик</h3>
-        <p class="text-[var(--text-muted)] text-sm leading-relaxed">Агентство берёт на себя полное развитие соцсетей, бесперебойное подключение трафика и стабильный рост дохода.</p>
-      </div>
-
-      <div class="reveal reveal-delay-2 card-hover surface rounded-2xl p-8">
-        <div class="w-11 h-11 rounded-full bg-[var(--accent-dim)] flex items-center justify-center mb-6">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.6"><path d="M19 5L5 19M8 8a3 3 0 1 0-6 0 3 3 0 0 0 6 0ZM22 16a3 3 0 1 0-6 0 3 3 0 0 0 6 0Z" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <h3 class="font-display text-xl text-white mb-3">Высокая ставка</h3>
         <p class="text-[var(--text-muted)] text-sm leading-relaxed">Все модели получают 20–30%. Возможна фиксированная ставка на старте — условия обсуждаются&nbsp;индивидуально.</p>
       </div>
 
-      <div class="reveal card-hover surface rounded-2xl p-8">
-        <div class="w-11 h-11 rounded-full bg-[var(--accent-dim)] flex items-center justify-center mb-6">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.6"><path d="M20 12v9H4v-9M2 7h20v5H2V7ZM12 22V7M12 7c-2 0-4-1.5-4-3.5S9 2 10 2c1.5 0 2 2 2 5ZM12 7c2 0 4-1.5 4-3.5S13 2 12 2c-1.5 0-2 2-2 5Z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div class="reveal reveal-delay-2 card-hover surface rounded-2xl p-8">
+        <div class="card-head">
+          <div class="card-icon">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.6"><path d="M20 12v9H4v-9M2 7h20v5H2V7ZM12 22V7M12 7c-2 0-4-1.5-4-3.5S9 2 10 2c1.5 0 2 2 2 5ZM12 7c2 0 4-1.5 4-3.5S13 2 12 2c-1.5 0-2 2-2 5Z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3 class="font-display text-xl text-white">Бонусы</h3>
         </div>
-        <h3 class="font-display text-xl text-white mb-3">Система бонусов</h3>
         <p class="text-[var(--text-muted)] text-sm leading-relaxed">Премиальное бельё, игрушки, инвентарь для съёмок, стильная одежда и дополнительные денежные премии.</p>
       </div>
 
-      <div class="reveal reveal-delay-1 card-hover surface rounded-2xl p-8">
-        <div class="w-11 h-11 rounded-full bg-[var(--accent-dim)] flex items-center justify-center mb-6">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.6"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="3"/></svg>
+      <div class="reveal card-hover surface rounded-2xl p-8">
+        <div class="card-head">
+          <div class="card-icon">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.6"><path d="M23 6l-9.5 9.5-5-5L1 18" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 6h6v6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3 class="font-display text-xl text-white">Трафик</h3>
         </div>
-        <h3 class="font-display text-xl text-white mb-3">Полная прозрачность</h3>
-        <p class="text-[var(--text-muted)] text-sm leading-relaxed">Постоянный доступ ко всем своим страницам через сервис контроля Onlymonster. Никаких скрытых метрик.</p>
+        <p class="text-[var(--text-muted)] text-sm leading-relaxed">Агентство берёт на себя полное развитие страниц, бесперебойное подключение трафика и стабильный рост дохода. Источники трафика обсуждаются&nbsp;индивидуально.</p>
+      </div>
+
+      <div class="reveal reveal-delay-1 card-hover surface rounded-2xl p-8">
+        <div class="card-head">
+          <div class="card-icon">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.6"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="3"/></svg>
+          </div>
+          <h3 class="font-display text-xl text-white">Прозрачность</h3>
+        </div>
+        <p class="text-[var(--text-muted)] text-sm leading-relaxed">Модель имеет постоянный доступ ко всем своим страницам через сервис контроля Onlymonster. Никаких скрытых метрик.</p>
       </div>
 
       <div class="reveal reveal-delay-2 card-hover surface rounded-2xl p-8">
-        <div class="w-11 h-11 rounded-full bg-[var(--accent-dim)] flex items-center justify-center mb-6">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.6"><rect x="3" y="4" width="18" height="17" rx="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 9h18M8 2v4M16 2v4" stroke-linecap="round"/><path d="M8 14l2.5 2.5L16 11" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="card-head">
+          <div class="card-icon">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.6"><rect x="3" y="4" width="18" height="17" rx="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 9h18M8 2v4M16 2v4" stroke-linecap="round"/><path d="M8 14l2.5 2.5L16 11" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3 class="font-display text-xl text-white">Выплаты</h3>
         </div>
-        <h3 class="font-display text-xl text-white mb-3">Своевременные&nbsp;выплаты</h3>
         <p class="text-[var(--text-muted)] text-sm leading-relaxed">Доход выплачивается строго 2 раза в месяц, без задержек и скрытых комиссий.</p>
       </div>
 
       <div class="reveal card-hover surface rounded-2xl p-8">
-        <div class="w-11 h-11 rounded-full bg-[var(--accent-dim)] flex items-center justify-center mb-6">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.6"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="card-head">
+          <div class="card-icon">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.6"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3 class="font-display text-xl text-white">Дисциплина</h3>
         </div>
-        <h3 class="font-display text-xl text-white mb-3">Рабочая дисциплина</h3>
-        <p class="text-[var(--text-muted)] text-sm leading-relaxed">Ответственный подход: кастомы, видеозвонки и контент-план — вовремя и без задержек.</p>
+        <p class="text-[var(--text-muted)] text-sm leading-relaxed">От модели требуется ответственный подход: своевременная запись кастомов, соблюдение контент-плана без задержек и высокая вовлечённость в&nbsp;процесс.</p>
       </div>
 
       <div class="reveal reveal-delay-1 card-hover surface rounded-2xl p-8">
-        <div class="w-11 h-11 rounded-full bg-[var(--accent-dim)] flex items-center justify-center mb-6">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="card-head">
+          <div class="card-icon">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3 class="font-display text-xl text-white">Оперативность</h3>
         </div>
-        <h3 class="font-display text-xl text-white mb-3">Оперативность 24/7</h3>
-        <p class="text-[var(--text-muted)] text-sm leading-relaxed">Надёжная поддержка и моментальная обратная связь. Менеджер всегда вовлечён в процесс.</p>
+        <p class="text-[var(--text-muted)] text-sm leading-relaxed">Надёжная поддержка со стороны команды и моментальная обратная связь. Менеджер всегда вовлечён в&nbsp;процесс.</p>
       </div>
 
       <div class="reveal reveal-delay-2 card-hover surface rounded-2xl p-8 sm:col-span-2 sm:w-[calc(50%-10px)] sm:mx-auto lg:col-span-1 lg:w-auto lg:mx-0">
-        <div class="w-11 h-11 rounded-full bg-[var(--accent-dim)] flex items-center justify-center mb-6">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.6"><rect x="4" y="11" width="16" height="10" rx="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="card-head">
+          <div class="card-icon">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.6"><rect x="4" y="11" width="16" height="10" rx="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3 class="font-display text-xl text-white">Конфиденциальность</h3>
         </div>
-        <h3 class="font-display text-xl text-white mb-3">Конфиденциальность</h3>
         <p class="text-[var(--text-muted)] text-sm leading-relaxed">Геоблоки, продуманная легенда и трафик исключительно на западные страны — США и Канаду.</p>
       </div>
 
@@ -901,18 +987,18 @@
 
 <!-- ================= CTA 1 ================= -->
 <section class="relative py-28 md:py-36 overflow-hidden">
-  <div class="absolute inset-0 img-tint">
+  <div class="absolute inset-0 img-tint cta-media">
     <img src="images/cta-banner.jpg" alt="" class="w-full h-full object-cover">
-    <div class="absolute inset-0" style="background:linear-gradient(90deg, rgba(5,5,5,0.92) 10%, rgba(5,5,5,0.55) 55%, rgba(5,5,5,0.85) 100%);"></div>
+    <div class="cta-scrim"></div>
   </div>
   <div class="max-w-[1400px] mx-auto px-6 md:px-10 relative z-10">
-    <div class="max-w-2xl reveal">
+    <div class="max-w-2xl reveal cta-copy">
       <span class="eyebrow">Количество мест ограничено</span>
       <h2 class="font-display text-3xl md:text-5xl leading-[1.08] tracking-[-0.02em] text-white mt-6">
         Не упустите свой шанс присоединиться к топ-агентствам
       </h2>
       <p class="text-[var(--text-muted)] mt-6 text-lg leading-relaxed">Количество мест строго ограничено, а вакансии в эти агентства крайне востребованы. Оставьте заявку — и мы подберём для вас лучшие условия.</p>
-      <a href="#contact" class="btn btn-primary mt-10 w-full sm:w-auto">
+      <a href="#contact" data-open-apply class="btn btn-primary mt-10 w-full sm:w-auto">
         Узнать все подробности
         <span class="btn-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 9.5L9.5 2.5M9.5 2.5H4M9.5 2.5V8" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </a>
@@ -1022,7 +1108,7 @@
     </div>
 
     <div class="reveal mt-14 text-center">
-      <a href="#contact" class="btn btn-primary w-full sm:w-auto">
+      <a href="#contact" data-open-apply class="btn btn-primary w-full sm:w-auto">
         Пройти собеседование
         <span class="btn-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 9.5L9.5 2.5M9.5 2.5H4M9.5 2.5V8" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </a>
@@ -1040,7 +1126,7 @@
         <p class="font-display italic text-2xl md:text-4xl text-white max-w-2xl mx-auto leading-snug">
           Заработок&nbsp;стартует от&nbsp;<span class="text-[var(--accent)] not-italic">$2 000</span>, и&nbsp;верхнего предела&nbsp;просто не&nbsp;существует.
         </p>
-        <a href="#contact" class="btn btn-primary mt-10 w-full sm:w-auto">
+        <a href="#contact" data-open-apply class="btn btn-primary mt-10 w-full sm:w-auto">
           Оставить заявку
           <span class="btn-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 9.5L9.5 2.5M9.5 2.5H4M9.5 2.5V8" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </a>
@@ -1065,15 +1151,15 @@
         </p>
         <div class="mt-10 stat-trio gap-6">
           <div class="stat-trio-item">
-            <div class="font-display text-3xl text-white">2021</div>
+            <div class="font-display text-3xl text-white"><span class="counter" data-count-to="2021">0</span></div>
             <div class="text-xs uppercase tracking-[0.08em] text-[var(--text-dim)] mt-2">Год основания</div>
           </div>
           <div class="stat-trio-item">
-            <div class="font-display text-3xl text-white">1000+</div>
+            <div class="font-display text-3xl text-white"><span class="counter" data-count-to="1000">0</span>+</div>
             <div class="text-xs uppercase tracking-[0.08em] text-[var(--text-dim)] mt-2">Успешных моделей</div>
           </div>
           <div class="stat-trio-item">
-            <div class="font-display text-3xl text-white">700+</div>
+            <div class="font-display text-3xl text-white"><span class="counter" data-count-to="700">0</span>+</div>
             <div class="text-xs uppercase tracking-[0.08em] text-[var(--text-dim)] mt-2">Наши кейсы</div>
           </div>
         </div>
@@ -1160,7 +1246,7 @@
           Смотреть отзывы в Telegram
           <span class="btn-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 9.5L9.5 2.5M9.5 2.5H4M9.5 2.5V8" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </a>
-        <a href="#contact" class="btn btn-ghost w-full sm:w-auto">
+        <a href="#contact" data-open-apply class="btn btn-ghost w-full sm:w-auto">
           Оставить заявку
           <span class="btn-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 9.5L9.5 2.5M9.5 2.5H4M9.5 2.5V8" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </a>
@@ -1460,8 +1546,8 @@
       Оставьте заявку, и наш менеджер свяжется с вами в Telegram, чтобы обсудить условия и подобрать проверенное агентство под ваш запрос.
     </p>
     <div class="reveal reveal-delay-3 mt-10 flex flex-col sm:flex-row sm:items-center justify-center gap-4">
-      <a href="https://t.me/divareviewsss" target="_blank" rel="noopener" class="btn btn-primary w-full sm:w-auto">
-        Написать в Telegram
+      <a href="#contact" data-open-apply class="btn btn-primary w-full sm:w-auto">
+        Оставить заявку
         <span class="btn-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 9.5L9.5 2.5M9.5 2.5H4M9.5 2.5V8" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </a>
       <a href="#benefits" class="btn btn-ghost w-full sm:w-auto">
@@ -1557,6 +1643,56 @@
   lightbox.querySelectorAll('[data-modal-dismiss]').forEach(el => el.addEventListener('click', (e) => { if(e.target === e.currentTarget) closeLightbox(); }));
   window.addEventListener('keydown', (e) => { if(e.key === 'Escape' && lightbox.classList.contains('open')) closeLightbox(); });
 
+  // Apply modal — form is fetched from apply-form.html and injected fresh
+  // on every open (so any tracking pixel added to that file fires every
+  // time a candidate views the form, not just once per page load).
+  const applyModal = document.getElementById('apply-modal');
+  const applyModalContent = document.getElementById('apply-modal-content');
+  let applyLastFocused = null;
+
+  function runInjectedScripts(container){
+    container.querySelectorAll('script').forEach(oldScript => {
+      const newScript = document.createElement('script');
+      [...oldScript.attributes].forEach(attr => newScript.setAttribute(attr.name, attr.value));
+      newScript.textContent = oldScript.textContent;
+      oldScript.replaceWith(newScript);
+    });
+  }
+
+  async function openApplyModal(){
+    applyLastFocused = document.activeElement;
+    if(calcModal.classList.contains('open')) closeCalcModal();
+    mobileMenu.classList.add('hidden-menu');
+    applyModal.classList.add('open');
+    applyModal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+
+    applyModalContent.innerHTML = '<div class="py-20 text-center text-[var(--text-dim)] text-sm">Загрузка формы…</div>';
+    try{
+      const res = await fetch('apply-form.html', { cache: 'no-store' });
+      if(!res.ok) throw new Error('fetch failed');
+      applyModalContent.innerHTML = await res.text();
+      runInjectedScripts(applyModalContent);
+    }catch(err){
+      applyModalContent.innerHTML = '<div class="py-20 text-center"><p class="text-[var(--text-dim)] text-sm">Не удалось загрузить форму. Напишите нам напрямую:</p><a href="https://t.me/divareviewsss" target="_blank" rel="noopener" class="btn btn-primary mt-6 inline-flex">Написать в Telegram</a></div>';
+    }
+  }
+
+  function closeApplyModal(){
+    applyModal.classList.remove('open');
+    applyModal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    if(applyLastFocused) applyLastFocused.focus();
+  }
+
+  document.querySelectorAll('[data-open-apply]').forEach(el => {
+    el.addEventListener('click', (e) => { e.preventDefault(); openApplyModal(); });
+  });
+  // Delegated so it also catches the close button inside injected content
+  applyModal.addEventListener('click', (e) => { if(e.target.closest('[data-modal-close]')) closeApplyModal(); });
+  applyModal.querySelectorAll('[data-modal-dismiss]').forEach(el => el.addEventListener('click', (e) => { if(e.target === e.currentTarget) closeApplyModal(); }));
+  window.addEventListener('keydown', (e) => { if(e.key === 'Escape' && applyModal.classList.contains('open')) closeApplyModal(); });
+
   // Testimonial marquee: pause on touch (hover is handled in CSS)
   const testimonialTrack = document.querySelector('.testimonial-track');
   if(testimonialTrack){
@@ -1598,6 +1734,38 @@
     });
   }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
   revealEls.forEach(el => io.observe(el));
+
+  // Count-up number animation
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const counterEls = document.querySelectorAll('.counter');
+  const easeOutQuart = t => 1 - Math.pow(1 - t, 4);
+
+  function animateCounter(el){
+    const target = parseInt(el.dataset.countTo, 10);
+    if(prefersReducedMotion || !target){
+      el.textContent = target;
+      return;
+    }
+    const duration = 1600;
+    const start = performance.now();
+    function tick(now){
+      const progress = Math.min((now - start) / duration, 1);
+      const value = Math.round(target * easeOutQuart(progress));
+      el.textContent = value;
+      if(progress < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  const counterIo = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        animateCounter(entry.target);
+        counterIo.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.4 });
+  counterEls.forEach(el => counterIo.observe(el));
 
   // ===== Calculator =====
   const followers = document.getElementById('followers');
