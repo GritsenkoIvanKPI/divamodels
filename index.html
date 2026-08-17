@@ -129,16 +129,15 @@
   .cond-card::after{
     content: attr(data-num);
     position: absolute; z-index: 0; pointer-events: none;
-    top: -0.09em; right: 0.04em;
-    font-family: 'Fraunces', serif;
-    font-variation-settings: 'opsz' 144;
-    font-weight: 500;
-    font-size: clamp(4.75rem, 17vw, 7.5rem);
-    line-height: 1; letter-spacing: -0.05em;
+    top: -0.12em; right: 0.05em;
+    font-family: 'Manrope', sans-serif;
+    font-weight: 800;
+    font-size: clamp(4.25rem, 15vw, 6.75rem);
+    line-height: 1; letter-spacing: -0.07em;
     background: linear-gradient(158deg,
-      rgba(255,255,255,0.12) 0%,
-      rgba(211,30,61,0.24) 52%,
-      rgba(255,255,255,0.055) 100%);
+      rgba(255,255,255,0.06) 0%,
+      rgba(211,30,61,0.13) 52%,
+      rgba(255,255,255,0.028) 100%);
     -webkit-background-clip: text; background-clip: text;
     color: transparent;
     transition: transform 0.6s cubic-bezier(.16,.8,.24,1), opacity 0.5s ease;
@@ -148,6 +147,32 @@
   .cond-card > *{ position: relative; z-index: 1; }
   @media (prefers-reduced-motion: reduce){
     .cond-card:hover::after{ transform: none; }
+  }
+
+  /* Mobile: the single column becomes a stack — each card pins under the
+     header and the next one slides over it, leaving a sliver of every
+     previous card visible above. Desktop keeps the plain grid. */
+  @media (max-width: 639px){
+    #benefits .cond-stack{ display: block; }
+    .cond-stack .cond-card{
+      position: sticky;
+      top: calc(92px + var(--i, 0) * 11px);
+      margin-bottom: 20px;
+      box-shadow: 0 -18px 40px -14px rgba(0,0,0,0.85);
+      border-top-color: rgba(255,255,255,0.11);
+    }
+    .cond-stack .cond-card:last-child{ margin-bottom: 0; }
+    /* flat fade-in only — a translate would fight the pinned position */
+    .cond-stack .cond-card.reveal{ transform: none; }
+    .cond-stack .cond-card:nth-child(1){ --i: 0; }
+    .cond-stack .cond-card:nth-child(2){ --i: 1; }
+    .cond-stack .cond-card:nth-child(3){ --i: 2; }
+    .cond-stack .cond-card:nth-child(4){ --i: 3; }
+    .cond-stack .cond-card:nth-child(5){ --i: 4; }
+    .cond-stack .cond-card:nth-child(6){ --i: 5; }
+    .cond-stack .cond-card:nth-child(7){ --i: 6; }
+    .cond-stack .cond-card:nth-child(8){ --i: 7; }
+    .cond-stack .cond-card:nth-child(9){ --i: 8; }
   }
 
   /* Icon + title on one row */
@@ -604,8 +629,8 @@
 <!-- Apply modal (content injected from apply-form.html) -->
 <div id="apply-modal" class="fixed inset-0 z-[90]" aria-hidden="true">
   <div class="absolute inset-0 bg-black/85 backdrop-blur-sm" data-modal-dismiss></div>
-  <div class="relative min-h-full flex items-center justify-center p-4 md:p-8" data-modal-dismiss>
-    <div class="modal-panel surface-floating rounded-2xl p-7 md:p-10 w-full max-w-lg max-h-[92vh] overflow-y-auto shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8)] relative">
+  <div class="relative min-h-full flex items-center justify-center p-4 md:p-6" data-modal-dismiss>
+    <div class="modal-panel surface-floating rounded-2xl p-7 md:p-8 w-full max-w-lg md:max-w-3xl max-h-[92vh] overflow-y-auto shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8)] relative">
       <button type="button" data-modal-close aria-label="Закрыть форму" class="absolute top-5 right-5 md:top-6 md:right-6 w-10 h-10 rounded-full border border-[var(--border)] flex items-center justify-center transition-colors hover:border-white/35 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent)] z-10">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1 1L15 15M15 1L1 15" stroke="white" stroke-width="1.4" stroke-linecap="round"/></svg>
       </button>
@@ -693,17 +718,17 @@
 <section id="benefits" class="relative mesh-soft py-24 md:py-32">
   <div class="max-w-[1400px] mx-auto px-6 md:px-10">
 
-    <div class="text-center max-w-2xl mx-auto mb-6 reveal">
-      <span class="eyebrow justify-center">Открыт набор в топ-агентства</span>
+    <div class="text-left md:text-center max-w-2xl mx-auto mb-6 reveal">
+      <span class="eyebrow md:justify-center">Открыт набор в топ-агентства</span>
     </div>
-    <h2 class="reveal reveal-delay-1 font-display text-center text-3xl md:text-[2.75rem] leading-[1.08] tracking-[-0.02em] text-white max-w-3xl mx-auto">
-      Условия&nbsp;сотрудничества&nbsp;и обязанности&nbsp;агентства
+    <h2 class="reveal reveal-delay-1 font-display text-left md:text-center text-3xl md:text-[2.75rem] leading-[1.08] tracking-[-0.02em] text-white max-w-3xl mx-auto">
+      Условия сотрудничества и&nbsp;обязанности агентства
     </h2>
-    <p class="reveal reveal-delay-2 text-center text-[var(--text-muted)] max-w-2xl mx-auto mt-6 leading-relaxed">
+    <p class="reveal reveal-delay-2 text-left md:text-center text-[var(--text-muted)] max-w-2xl mx-auto mt-6 leading-relaxed">
       Мы открыли набор в топ-агентства Украины и несколько агентств из Польши и Германии. Заработок моделей стартует от <span class="text-white font-medium">$2 000</span>, и верхнего предела не существует.
     </p>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-16">
+    <div class="cond-stack grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-16">
 
       <div class="reveal card-hover surface rounded-2xl p-8 cond-card" data-num="01">
         <div class="card-head">
@@ -1067,8 +1092,8 @@
 <!-- ================= MARKET OF ILLUSIONS ================= -->
 <section id="market" class="relative bg-[var(--bg)] py-24 md:py-32">
   <div class="max-w-[1400px] mx-auto px-6 md:px-10">
-    <div class="text-center max-w-3xl mx-auto reveal">
-      <span class="eyebrow justify-center">Важное предостережение</span>
+    <div class="text-left md:text-center max-w-3xl mx-auto reveal">
+      <span class="eyebrow md:justify-center">Важное предостережение</span>
       <h2 class="font-display text-3xl md:text-[3.2rem] leading-[1.05] tracking-[-0.02em] text-white mt-6">Рынок иллюзий</h2>
       <p class="text-[var(--text-muted)] mt-6 text-lg leading-relaxed">
         Будьте осторожны. Сегодня 95% тех, кто пишет вам в личные сообщения под видом&nbsp;«крупного OnlyFans-агентства», — это обычные посредники и недобросовестные скауты.
@@ -1595,8 +1620,8 @@
 <!-- ================= FINAL CTA + CONTACT PREVIEW ================= -->
 <section id="contact" class="relative py-28 md:py-36 overflow-hidden">
   <div class="absolute inset-0 mesh-hero"></div>
-  <div class="max-w-[1400px] mx-auto px-6 md:px-10 relative z-10 text-center">
-    <span class="eyebrow justify-center reveal">Стать моделью</span>
+  <div class="max-w-[1400px] mx-auto px-6 md:px-10 relative z-10 text-left md:text-center">
+    <span class="eyebrow md:justify-center reveal">Стать моделью</span>
     <h2 class="reveal reveal-delay-1 font-display text-3xl md:text-[3.4rem] leading-[1.05] tracking-[-0.02em] text-white mt-6 max-w-2xl mx-auto">
       Готовы выйти на доход от <span class="whitespace-nowrap">$2 000</span> из дома?
     </h2>
