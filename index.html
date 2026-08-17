@@ -124,6 +124,32 @@
     box-shadow: 0 24px 48px -20px rgba(0,0,0,0.6), 0 0 0 1px rgba(211,30,61,0.12);
   }
 
+  /* Oversized watermark numeral, sits behind the card content */
+  .cond-card{ position: relative; overflow: hidden; }
+  .cond-card::after{
+    content: attr(data-num);
+    position: absolute; z-index: 0; pointer-events: none;
+    top: -0.09em; right: 0.04em;
+    font-family: 'Fraunces', serif;
+    font-variation-settings: 'opsz' 144;
+    font-weight: 500;
+    font-size: clamp(4.75rem, 17vw, 7.5rem);
+    line-height: 1; letter-spacing: -0.05em;
+    background: linear-gradient(158deg,
+      rgba(255,255,255,0.12) 0%,
+      rgba(211,30,61,0.24) 52%,
+      rgba(255,255,255,0.055) 100%);
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent;
+    transition: transform 0.6s cubic-bezier(.16,.8,.24,1), opacity 0.5s ease;
+    opacity: 0.85;
+  }
+  .cond-card:hover::after{ opacity: 1; transform: translate(-4px, 6px); }
+  .cond-card > *{ position: relative; z-index: 1; }
+  @media (prefers-reduced-motion: reduce){
+    .cond-card:hover::after{ transform: none; }
+  }
+
   /* Icon + title on one row */
   .card-head{
     display: flex; align-items: center; gap: 14px;
@@ -318,10 +344,42 @@
   }
   @keyframes pulseBar{
     0%{ transform: scaleY(var(--h)); opacity: 0.92; }
-    100%{ transform: scaleY(calc(var(--h) * 0.6)); opacity: 1; }
+    100%{ transform: scaleY(calc(var(--h) * var(--amp, 0.6))); opacity: 1; }
   }
   @media (prefers-reduced-motion: reduce){
     .gradient-bars-bg .bar{ animation: none; }
+  }
+  /* Mobile: thinner beams with soft tips instead of wide slabs */
+  @media (max-width: 639px){
+    .gradient-bars-bg{
+      gap: 7px;
+      -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 12%, #000 88%, transparent 100%);
+      mask-image: linear-gradient(90deg, transparent 0%, #000 12%, #000 88%, transparent 100%);
+    }
+    .gradient-bars-bg .bar{
+      flex: var(--w, 1) 1 0;
+      border-radius: 10px 10px 0 0;
+      background: linear-gradient(to top,
+        var(--accent) 0%,
+        var(--accent-bright) 38%,
+        #ff8fa3 68%,
+        rgba(255,143,163,0.35) 86%,
+        transparent 100%);
+      /* soft sides, so each beam bleeds into the gap instead of ending on a hard line */
+      -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 34%, #000 66%, transparent 100%);
+      mask-image: linear-gradient(90deg, transparent 0%, #000 34%, #000 66%, transparent 100%);
+    }
+  }
+  .cta2-scrim{
+    position: absolute; inset: 0; z-index: 1;
+    background: radial-gradient(ellipse at center, rgba(5,5,5,0.32) 0%, rgba(5,5,5,0.68) 55%, rgba(5,5,5,0.88) 100%);
+  }
+  @media (max-width: 639px){
+    .cta2-scrim{
+      background:
+        radial-gradient(80% 46% at 50% 34%, rgba(5,5,5,0.80), rgba(5,5,5,0.42) 70%, transparent 100%),
+        linear-gradient(180deg, rgba(5,5,5,0.72) 0%, rgba(5,5,5,0.52) 40%, rgba(5,5,5,0.58) 100%);
+    }
   }
   .page-stat-row{ display: flex; flex-direction: column; gap: 2px; }
   @media (min-width: 420px){
@@ -647,7 +705,7 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-16">
 
-      <div class="reveal card-hover surface rounded-2xl p-8">
+      <div class="reveal card-hover surface rounded-2xl p-8 cond-card" data-num="01">
         <div class="card-head">
           <div class="card-icon">
             <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.6"><path d="M17 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2M10 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM22 20v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -657,7 +715,7 @@
         <p class="text-[var(--text-muted)] text-sm leading-relaxed">Профессиональная команда гарантирует всестороннюю поддержку, уважительное общение и слаженную работу штата специалистов: чатеры, контент-менеджеры,&nbsp;маркетологи.</p>
       </div>
 
-      <div class="reveal reveal-delay-1 card-hover surface rounded-2xl p-8">
+      <div class="reveal reveal-delay-1 card-hover surface rounded-2xl p-8 cond-card" data-num="02">
         <div class="card-head">
           <div class="card-icon">
             <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.6"><path d="M19 5L5 19M8 8a3 3 0 1 0-6 0 3 3 0 0 0 6 0ZM22 16a3 3 0 1 0-6 0 3 3 0 0 0 6 0Z" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -667,7 +725,7 @@
         <p class="text-[var(--text-muted)] text-sm leading-relaxed">Все модели получают 20–30%. Возможна фиксированная ставка на старте — условия обсуждаются&nbsp;индивидуально.</p>
       </div>
 
-      <div class="reveal reveal-delay-2 card-hover surface rounded-2xl p-8">
+      <div class="reveal reveal-delay-2 card-hover surface rounded-2xl p-8 cond-card" data-num="03">
         <div class="card-head">
           <div class="card-icon">
             <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.6"><path d="M20 12v9H4v-9M2 7h20v5H2V7ZM12 22V7M12 7c-2 0-4-1.5-4-3.5S9 2 10 2c1.5 0 2 2 2 5ZM12 7c2 0 4-1.5 4-3.5S13 2 12 2c-1.5 0-2 2-2 5Z" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -677,7 +735,7 @@
         <p class="text-[var(--text-muted)] text-sm leading-relaxed">Премиальное бельё, игрушки, инвентарь для съёмок, стильная одежда и дополнительные денежные премии.</p>
       </div>
 
-      <div class="reveal card-hover surface rounded-2xl p-8">
+      <div class="reveal card-hover surface rounded-2xl p-8 cond-card" data-num="04">
         <div class="card-head">
           <div class="card-icon">
             <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.6"><path d="M23 6l-9.5 9.5-5-5L1 18" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 6h6v6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -687,7 +745,7 @@
         <p class="text-[var(--text-muted)] text-sm leading-relaxed">Агентство берёт на себя полное развитие страниц, бесперебойное подключение трафика и стабильный рост дохода. Источники трафика обсуждаются&nbsp;индивидуально.</p>
       </div>
 
-      <div class="reveal reveal-delay-1 card-hover surface rounded-2xl p-8">
+      <div class="reveal reveal-delay-1 card-hover surface rounded-2xl p-8 cond-card" data-num="05">
         <div class="card-head">
           <div class="card-icon">
             <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.6"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="3"/></svg>
@@ -697,7 +755,7 @@
         <p class="text-[var(--text-muted)] text-sm leading-relaxed">Модель имеет постоянный доступ ко всем своим страницам через сервис контроля Onlymonster. Никаких скрытых метрик.</p>
       </div>
 
-      <div class="reveal reveal-delay-2 card-hover surface rounded-2xl p-8">
+      <div class="reveal reveal-delay-2 card-hover surface rounded-2xl p-8 cond-card" data-num="06">
         <div class="card-head">
           <div class="card-icon">
             <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.6"><rect x="3" y="4" width="18" height="17" rx="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 9h18M8 2v4M16 2v4" stroke-linecap="round"/><path d="M8 14l2.5 2.5L16 11" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -707,7 +765,7 @@
         <p class="text-[var(--text-muted)] text-sm leading-relaxed">Доход выплачивается строго 2 раза в месяц, без задержек и скрытых комиссий.</p>
       </div>
 
-      <div class="reveal card-hover surface rounded-2xl p-8">
+      <div class="reveal card-hover surface rounded-2xl p-8 cond-card" data-num="07">
         <div class="card-head">
           <div class="card-icon">
             <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.6"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -717,7 +775,7 @@
         <p class="text-[var(--text-muted)] text-sm leading-relaxed">От модели требуется ответственный подход: своевременная запись кастомов, соблюдение контент-плана без задержек и высокая вовлечённость в&nbsp;процесс.</p>
       </div>
 
-      <div class="reveal reveal-delay-1 card-hover surface rounded-2xl p-8">
+      <div class="reveal reveal-delay-1 card-hover surface rounded-2xl p-8 cond-card" data-num="08">
         <div class="card-head">
           <div class="card-icon">
             <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -727,7 +785,7 @@
         <p class="text-[var(--text-muted)] text-sm leading-relaxed">Надёжная поддержка со стороны команды и моментальная обратная связь. Менеджер всегда вовлечён в&nbsp;процесс.</p>
       </div>
 
-      <div class="reveal reveal-delay-2 card-hover surface rounded-2xl p-8 sm:col-span-2 sm:w-[calc(50%-10px)] sm:mx-auto lg:col-span-1 lg:w-auto lg:mx-0">
+      <div class="reveal reveal-delay-2 card-hover surface rounded-2xl p-8 sm:col-span-2 sm:w-[calc(50%-10px)] sm:mx-auto lg:col-span-1 lg:w-auto lg:mx-0 cond-card" data-num="09">
         <div class="card-head">
           <div class="card-icon">
             <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.6"><rect x="4" y="11" width="16" height="10" rx="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -1121,7 +1179,7 @@
   <div class="max-w-[1400px] mx-auto px-6 md:px-10">
     <div class="surface rounded-2xl px-8 py-14 md:px-16 md:py-20 text-center reveal relative overflow-hidden">
       <div class="gradient-bars-bg" aria-hidden="true"></div>
-      <div class="absolute inset-0 z-[1]" style="background:radial-gradient(ellipse at center, rgba(5,5,5,0.32) 0%, rgba(5,5,5,0.68) 55%, rgba(5,5,5,0.88) 100%);"></div>
+      <div class="cta2-scrim" aria-hidden="true"></div>
       <div class="relative z-10">
         <p class="font-display italic text-2xl md:text-4xl text-white max-w-2xl mx-auto leading-snug">
           Заработок&nbsp;стартует от&nbsp;<span class="text-[var(--accent)] not-italic">$2 000</span>, и&nbsp;верхнего предела&nbsp;просто не&nbsp;существует.
@@ -1708,17 +1766,32 @@
 
   // Animated gradient bars background
   document.querySelectorAll('.gradient-bars-bg').forEach(container => {
-    const numBars = window.innerWidth < 640 ? 9 : 15;
+    const isNarrow = window.innerWidth < 640;
+    const numBars = isNarrow ? 13 : 15;
     for (let i = 0; i < numBars; i++) {
       const position = i / (numBars - 1);
-      const distanceFromCenter = Math.abs(position - 0.5);
-      const heightPct = Math.pow(distanceFromCenter * 2, 1.2);
-      const height = (30 + (100 - 30) * heightPct) / 100;
+      let height, amp, width;
+      if (isNarrow) {
+        // Rolling skyline of uneven light shafts: no dead centre, every beam
+        // tall enough to read behind the copy, and each one with its own
+        // width and travel distance so it never lines up into a barcode.
+        const wave = 0.5 - 0.5 * Math.cos(position * Math.PI * 3.4 + 0.6);
+        const edge = Math.pow(Math.abs(position - 0.5) * 2, 1.6);
+        height = 0.58 + 0.3 * wave + 0.12 * edge + Math.random() * 0.06;
+        amp = 0.52 + Math.random() * 0.3;
+        width = 0.55 + Math.random() * 1.15;
+      } else {
+        const distanceFromCenter = Math.abs(position - 0.5);
+        const heightPct = Math.pow(distanceFromCenter * 2, 1.2);
+        height = (30 + (100 - 30) * heightPct) / 100;
+      }
       const bar = document.createElement('div');
       bar.className = 'bar';
       bar.style.setProperty('--h', height.toFixed(3));
-      bar.style.setProperty('--delay', (i * 0.1).toFixed(2) + 's');
+      bar.style.setProperty('--delay', (i * (isNarrow ? 0.14 : 0.1)).toFixed(2) + 's');
       bar.style.setProperty('--dur', (2 + Math.random() * 0.8).toFixed(2) + 's');
+      if (amp) bar.style.setProperty('--amp', amp.toFixed(3));
+      if (width) bar.style.setProperty('--w', width.toFixed(3));
       container.appendChild(bar);
     }
   });
