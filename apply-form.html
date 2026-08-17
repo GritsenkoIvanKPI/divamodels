@@ -79,6 +79,32 @@
   .af-group.af-invalid .af-pill{ border-color: rgba(255,61,94,0.5); }
   .af-group.af-invalid .af-error{ display: block; }
 
+  /* Layout — one column on phones, two from 768px so the form clears the fold */
+  #af-form{ margin-top: 36px; }
+  .af-grid{ display: flex; flex-direction: column; gap: 28px; }
+  .af-footer{ margin-top: 28px; }
+  .af-consents{ display: flex; flex-direction: column; gap: 16px; }
+  .af-submit{ width: 100%; margin-top: 28px; }
+
+  @media (min-width: 768px){
+    #af-header h3{ margin-top: 10px; }
+    #af-form{ margin-top: 22px; }
+    .af-grid{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto auto;
+      grid-auto-flow: column;
+      column-gap: 44px; row-gap: 16px;
+      align-items: start;
+    }
+    .af-footer{
+      margin-top: 20px;
+      display: flex; align-items: flex-end; justify-content: space-between; gap: 40px;
+    }
+    .af-consents{ flex: 1; gap: 12px; }
+    .af-submit{ width: auto; margin-top: 0; flex-shrink: 0; }
+  }
+
   #af-success{ display: none; }
   #af-success.active{ display: block; }
   #af-form-view.hidden{ display: none; }
@@ -91,15 +117,19 @@
 <!-- <script>/* e.g. fbq('track', 'ViewContent'); */</script> -->
 
 <div id="af-form-view">
-  <div class="text-center">
+  <div class="text-center" id="af-header">
     <span class="af-badge">Заявка кандидата</span>
     <h3 class="font-display text-3xl text-white mt-5">Стать <span class="text-[var(--accent)]">моделью</span></h3>
-    <p class="text-[var(--text-muted)] text-sm leading-relaxed mt-3 max-w-sm mx-auto">
+    <p class="text-[var(--text-muted)] text-sm leading-relaxed mt-3 max-w-sm md:max-w-xl mx-auto">
       Оставьте свои данные, и наш менеджер свяжется с вами в Telegram для обсуждения условий.
     </p>
   </div>
 
-  <form id="af-form" class="mt-9 space-y-7" novalidate>
+  <form id="af-form" novalidate>
+    <!-- Column 1 takes the three text fields, column 2 the three choice
+         groups, so the whole form clears the fold on a laptop. Stacks back
+         to one column below 768px, in source order. -->
+    <div class="af-grid">
     <div class="af-field">
       <label for="af-name">Ваше имя</label>
       <input type="text" id="af-name" name="name" autocomplete="name" placeholder="Имя" required>
@@ -146,22 +176,25 @@
       </div>
       <div class="af-error">Пожалуйста, выберите вариант.</div>
     </div>
-
-    <div class="af-field space-y-4 pt-1">
-      <label class="af-check">
-        <input type="checkbox" id="af-consent-age" required>
-        <span>Я подтверждаю, что мне 18+</span>
-      </label>
-      <label class="af-check">
-        <input type="checkbox" id="af-consent-data" required>
-        <span>Я согласна, что Diva Models может обработать данные для разбора и связи со мной.</span>
-      </label>
-      <div class="af-error">Необходимо подтвердить оба пункта.</div>
     </div>
 
-    <button type="submit" class="btn btn-primary w-full justify-center">
-      Отправить заявку
-    </button>
+    <div class="af-footer">
+      <div class="af-field af-consents">
+        <label class="af-check">
+          <input type="checkbox" id="af-consent-age" required>
+          <span>Я подтверждаю, что мне 18+</span>
+        </label>
+        <label class="af-check">
+          <input type="checkbox" id="af-consent-data" required>
+          <span>Я согласна, что Diva Models может обработать данные для разбора и связи со мной.</span>
+        </label>
+        <div class="af-error">Необходимо подтвердить оба пункта.</div>
+      </div>
+
+      <button type="submit" class="btn btn-primary af-submit justify-center">
+        Отправить заявку
+      </button>
+    </div>
   </form>
 </div>
 
