@@ -1,11 +1,12 @@
 /* ============================================================================
    DIVA MODELS — script for the blog listing and article pages
    ============================================================================
-   Only what those pages actually need: the mobile menu, the apply modal, and
-   the scroll reveal. The main page keeps its own inline script — it also
-   drives the calculator, lightbox, marquee and counters, none of which exist
-   here. Every lookup is guarded so a missing element is a no-op rather than a
-   thrown error that kills the rest of the file.
+   Only what those pages actually need: the mobile menu and the apply modal.
+   No entrance animation — blog content renders immediately. The main page
+   keeps its own inline script, which also drives the calculator, lightbox,
+   marquee and counters, none of which exist here. Every lookup is guarded so
+   a missing element is a no-op rather than a thrown error that kills the
+   rest of the file.
    ============================================================================ */
 (function(){
   'use strict';
@@ -73,17 +74,8 @@
     window.addEventListener('keydown', (e) => { if(e.key === 'Escape' && applyModal.classList.contains('open')) closeApplyModal(); });
   }
 
-  // --- Scroll reveal -------------------------------------------------------
-  const revealEls = document.querySelectorAll('.reveal');
-  if(revealEls.length){
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if(entry.isIntersecting){
-          entry.target.classList.add('visible');
-          io.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-    revealEls.forEach(el => io.observe(el));
-  }
+  // Note: no scroll-reveal here. The blog and article pages render their
+  // content immediately — the .reveal classes were stripped from their
+  // markup, so there is nothing to observe. The main page keeps its own
+  // reveal animation in its inline script.
 })();
