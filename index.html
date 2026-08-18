@@ -344,6 +344,28 @@
       box-shadow: none;
     }
     .market-inner{ padding: 40px 24px 36px; }
+
+    /* The block runs ~1500px tall on a phone, so object-cover was scaling a
+       1376x768 photo to fill that height — showing 14.5% of it at roughly a
+       6x upscale, hence the close crop and the visible pixels. Cap the photo
+       to a band at the top and fade it into the section background: the same
+       source now covers 45% of the frame at 1:1 on a 3x screen. */
+    .market-media{
+      bottom: auto;
+      height: 480px;
+      -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 58%, transparent 100%);
+      mask-image: linear-gradient(180deg, #000 0%, #000 58%, transparent 100%);
+    }
+    .market-media img{ object-position: 50% 44%; }
+    .market-scrim{
+      background:
+        radial-gradient(120% 58% at 22% 34%, rgba(5,5,5,0.62), transparent 76%),
+        linear-gradient(180deg,
+          rgba(5,5,5,0.60) 0%,
+          rgba(5,5,5,0.50) 44%,
+          rgba(5,5,5,0.38) 74%,
+          rgba(5,5,5,0.32) 100%);
+    }
   }
 
   @media (min-width: 768px){
@@ -1225,10 +1247,10 @@
       <div class="market-media" aria-hidden="true">
         <picture class="block w-full h-full">
           <source type="image/webp"
-                  sizes="(min-width: 1400px) 1320px, (min-width: 768px) calc(100vw - 80px), calc(100vw - 48px)"
+                  sizes="(max-width: 767px) 860px, (min-width: 1400px) 1320px, calc(100vw - 80px)"
                   srcset="images/market-lit-1376.webp 1376w, images/market-lit-2752.webp 2752w">
           <img loading="lazy" decoding="async"
-               sizes="(min-width: 1400px) 1320px, (min-width: 768px) calc(100vw - 80px), calc(100vw - 48px)"
+               sizes="(max-width: 767px) 860px, (min-width: 1400px) 1320px, calc(100vw - 80px)"
                srcset="images/market-lit-1376.jpg 1376w, images/market-lit-2752.jpg 2752w"
                src="images/market-lit-1376.jpg" alt="" class="w-full h-full object-cover">
         </picture>
@@ -1397,7 +1419,7 @@
           </div>
           <div class="stat-trio-item">
             <div class="font-display text-3xl text-white"><span class="counter" data-count-to="700">0</span>+</div>
-            <div class="text-xs uppercase tracking-[0.08em] text-[var(--text-dim)] mt-2">Наши кейсы</div>
+            <div class="text-xs uppercase tracking-[0.08em] text-[var(--text-dim)] mt-2">Агентств партнёров</div>
           </div>
         </div>
       </div>
