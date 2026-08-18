@@ -144,6 +144,23 @@
     opacity: 0.85;
   }
   .cond-card:hover::after{ opacity: 1; transform: translate(-4px, 6px); }
+  /* Phones: the numeral was only ~68px and lost in the busiest corner, level
+     with the icon and title. Anchor it to the bottom-right instead — where
+     the last line of copy leaves the most air — and scale it right up. */
+  @media (max-width: 639px){
+    /* Reserve a band at the foot of every card so the numeral has room of
+       its own and never lands under the last lines of copy. */
+    .cond-stack .cond-card{ padding-bottom: 92px; }
+    .cond-card::after{
+      font-size: 8.5rem;
+      top: auto; bottom: -0.20em; right: -0.03em;
+      background: linear-gradient(152deg,
+        rgba(255,255,255,0.10) 0%,
+        rgba(211,30,61,0.22) 50%,
+        rgba(255,255,255,0.05) 100%);
+      -webkit-background-clip: text; background-clip: text;
+    }
+  }
   .cond-card > *{ position: relative; z-index: 1; }
   @media (prefers-reduced-motion: reduce){
     .cond-card:hover::after{ transform: none; }
@@ -315,6 +332,19 @@
     border-color: rgba(211,30,61,0.30);
   }
   .market-footer{ margin-top: 14px; display: flex; flex-direction: column; gap: 20px; }
+
+  /* Phones: bleed the card out to both screen edges (cancelling the page
+     gutter with negative margins) so the photo runs full width, while the
+     inner padding still puts the copy on the site's 24px gutter — the same
+     line every other section starts on. */
+  @media (max-width: 767px){
+    .market-frame{
+      margin-left: -24px; margin-right: -24px;
+      border-radius: 0; border-left: 0; border-right: 0;
+      box-shadow: none;
+    }
+    .market-inner{ padding: 40px 24px 36px; }
+  }
 
   @media (min-width: 768px){
     .market-frame{ border-radius: 28px; }
@@ -1752,8 +1782,8 @@
         Оставить заявку
         <span class="btn-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 9.5L9.5 2.5M9.5 2.5H4M9.5 2.5V8" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </a>
-      <a href="#benefits" class="btn btn-ghost w-full sm:w-auto">
-        Узнать условия
+      <a href="https://t.me/divareviewsss" target="_blank" rel="noopener" class="btn btn-ghost w-full sm:w-auto">
+        Написать менеджеру
         <span class="btn-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 9.5L9.5 2.5M9.5 2.5H4M9.5 2.5V8" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </a>
     </div>
