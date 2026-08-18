@@ -276,33 +276,62 @@
     .about-copy h2, .about-copy p, .about-copy .eyebrow, .about-copy .stat-trio{ text-shadow: none; }
   }
 
-  /* Market band: the lit phone sits centre-left in the source, so the crop is
-     pushed to the left edge to slide it clear of the copy column, and the
-     scrim stays heaviest over the text. */
-  .market-media img{ object-position: 20% 46%; }
+  /* Market block: framed card inset from the page edges, brightened photo
+     behind, and the copy split across panels so it stops piling up in one
+     tall left column. Each panel carries its own blur so the picture can
+     stay bright without costing legibility. */
+  .market-frame{
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    box-shadow: 0 40px 90px -40px rgba(0,0,0,0.9);
+    isolation: isolate;
+  }
+  .market-media{ position: absolute; inset: 0; z-index: 0; }
+  .market-media img{ object-position: 42% 50%; }
   .market-scrim{
     position: absolute; inset: 0; z-index: 1; pointer-events: none;
-    background: linear-gradient(182deg,
-      rgba(5,5,5,0.34) 0%,
-      rgba(5,5,5,0.84) 13%,
-      rgba(5,5,5,0.92) 55%,
-      rgba(5,5,5,0.82) 88%,
+    background: linear-gradient(180deg,
+      rgba(5,5,5,0.72) 0%,
+      rgba(5,5,5,0.50) 34%,
+      rgba(5,5,5,0.34) 62%,
       rgba(5,5,5,0.46) 100%);
   }
-  .market-copy h2, .market-copy h3, .market-copy p, .market-copy .eyebrow{
-    text-shadow: 0 1px 18px rgba(5,5,5,0.65);
+  .market-inner{ position: relative; z-index: 2; padding: 32px 24px 28px; }
+  .market-lead{ color: #d2d2d8; }
+  .market-cols{ display: grid; gap: 14px; margin-top: 32px; }
+  .market-panel{
+    background: rgba(9,9,10,0.74);
+    -webkit-backdrop-filter: blur(16px) saturate(1.1);
+    backdrop-filter: blur(16px) saturate(1.1);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 16px;
+    padding: 24px;
   }
+  .market-panel p{ color: #b6b6bd; }
+  .market-panel-accent{
+    background: rgba(30,9,15,0.76);
+    border-color: rgba(211,30,61,0.30);
+  }
+  .market-footer{ margin-top: 14px; display: flex; flex-direction: column; gap: 20px; }
+
   @media (min-width: 768px){
-    .market-media img{ object-position: 8% 50%; }
+    .market-frame{ border-radius: 28px; }
+    .market-media img{ object-position: 50% 46%; }
     .market-scrim{
       background:
-        linear-gradient(90deg,
-          rgba(5,5,5,0.95) 0%,
-          rgba(5,5,5,0.90) 42%,
-          rgba(5,5,5,0.55) 72%,
-          rgba(5,5,5,0.74) 100%);
+        radial-gradient(74% 68% at 6% 24%, rgba(5,5,5,0.93), rgba(5,5,5,0.55) 52%, transparent 84%),
+        linear-gradient(180deg, rgba(5,5,5,0.44) 0%, rgba(5,5,5,0.24) 45%, rgba(5,5,5,0.40) 100%);
     }
-    .market-copy h2, .market-copy h3, .market-copy p, .market-copy .eyebrow{ text-shadow: none; }
+    .market-inner{ padding: 56px 56px 48px; }
+    .market-cols{ grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 48px; }
+    .market-footer{
+      margin-top: 18px;
+      flex-direction: row; align-items: center; justify-content: space-between; gap: 40px;
+    }
+    .market-footer p{ max-width: 60ch; }
+    .market-footer .btn{ flex-shrink: 0; }
   }
 
   /* Radial mesh backgrounds */
@@ -1160,41 +1189,51 @@
 </section>
 
 <!-- ================= MARKET OF ILLUSIONS ================= -->
-<section id="market" class="relative py-24 md:py-32 overflow-hidden bg-[var(--bg)]">
-  <div class="absolute inset-0 img-tint market-media">
-    <picture class="block w-full h-full">
-      <source type="image/webp" srcset="images/market-of-illusions.webp">
-      <img loading="lazy" decoding="async" src="images/market-of-illusions.jpg" alt="" class="w-full h-full object-cover">
-    </picture>
-    <div class="market-scrim" aria-hidden="true"></div>
-  </div>
-  <div class="max-w-[1400px] mx-auto px-6 md:px-10 relative z-10">
-    <div class="max-w-2xl market-copy">
-    <div class="reveal">
-      <span class="eyebrow">Важное предостережение</span>
-      <h2 class="font-display text-3xl md:text-[3.2rem] leading-[1.05] tracking-[-0.02em] text-white mt-6">Рынок иллюзий</h2>
-      <p class="text-[var(--text-muted)] mt-6 text-lg leading-relaxed">
-        Будьте осторожны. Сегодня 95% тех, кто пишет вам в личные сообщения под видом&nbsp;«крупного OnlyFans-агентства», — это обычные посредники и недобросовестные скауты.
-      </p>
-    </div>
+<section id="market" class="relative bg-[var(--bg)] py-24 md:py-32">
+  <div class="max-w-[1400px] mx-auto px-6 md:px-10">
+    <div class="market-frame reveal">
+      <div class="market-media" aria-hidden="true">
+        <picture class="block w-full h-full">
+          <source type="image/webp" srcset="images/market-lit.webp">
+          <img loading="lazy" decoding="async" src="images/market-lit.jpg" alt="" class="w-full h-full object-cover">
+        </picture>
+        <div class="market-scrim"></div>
+      </div>
 
-      <div class="reveal reveal-delay-1 mt-12 md:mt-14">
-        <h3 class="font-display text-2xl text-white mb-4">Как устроен реальный рынок?</h3>
-        <p class="text-[var(--text-muted)] leading-relaxed mb-8">
-          Топовые агентства предпочитают пользоваться услугами профессиональных рекрутинговых компаний — им невыгодно содержать собственный большой HR-отдел ради поиска одной модели раз в несколько месяцев.
-        </p>
+      <div class="market-inner">
+        <div class="max-w-xl">
+          <span class="eyebrow">Важное предостережение</span>
+          <h2 class="font-display text-3xl md:text-[3.2rem] leading-[1.05] tracking-[-0.02em] text-white mt-6">Рынок иллюзий</h2>
+          <p class="market-lead mt-6 text-lg leading-relaxed">
+            Будьте осторожны. Сегодня 95% тех, кто пишет вам в личные сообщения под видом&nbsp;«крупного OnlyFans-агентства», — это обычные посредники и недобросовестные скауты.
+          </p>
+        </div>
 
-        <h3 class="font-display text-2xl text-white mb-4">Как обманывают моделей</h3>
-        <p class="text-[var(--text-muted)] leading-relaxed mb-4">
-          Схема «чёрных скаутов» проста: вам говорят «мы готовы с тобой работать, нужно подождать пару дней, пока выделим менеджера». В этот момент вашу анкету «сливают» в теневые Telegram-маркеты, а вашу судьбу выставляют на аукцион — вас отдадут тому, кто заплатит скауту больше.
-        </p>
-        <p class="text-[var(--text-muted)] leading-relaxed mb-8">
-          Работая с DIVA MODELS, вы защищены от подобных рисков. Мы — официальное рекрутинговое агентство. Наша задача — подобрать проверенное агентство под ваши запросы и взять на себя полную ответственность за вашу&nbsp;безопасность.
-        </p>
-        <a href="#blog" class="btn btn-ghost w-full sm:w-auto">
-          Читать статью в блоге
-          <span class="btn-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 9.5L9.5 2.5M9.5 2.5H4M9.5 2.5V8" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        </a>
+        <div class="market-cols">
+          <div class="market-panel">
+            <h3 class="font-display text-2xl text-white mb-4">Как устроен реальный рынок?</h3>
+            <p class="text-[var(--text-muted)] leading-relaxed">
+              Топовые агентства предпочитают пользоваться услугами профессиональных рекрутинговых компаний — им невыгодно содержать собственный большой HR-отдел ради поиска одной модели раз в несколько месяцев.
+            </p>
+          </div>
+
+          <div class="market-panel">
+            <h3 class="font-display text-2xl text-white mb-4">Как обманывают моделей</h3>
+            <p class="text-[var(--text-muted)] leading-relaxed">
+              Схема «чёрных скаутов» проста: вам говорят «мы готовы с тобой работать, нужно подождать пару дней, пока выделим менеджера». В этот момент вашу анкету «сливают» в теневые Telegram-маркеты, а вашу судьбу выставляют на аукцион — вас отдадут тому, кто заплатит скауту больше.
+            </p>
+          </div>
+        </div>
+
+        <div class="market-panel market-panel-accent market-footer">
+          <p class="text-[var(--text-muted)] leading-relaxed">
+            Работая с <span class="text-white font-semibold">DIVA MODELS</span>, вы защищены от подобных рисков. Мы — официальное рекрутинговое агентство. Наша задача — подобрать проверенное агентство под ваши запросы и взять на себя полную ответственность за вашу&nbsp;безопасность.
+          </p>
+          <a href="#blog" class="btn btn-ghost w-full sm:w-auto">
+            Читать статью в блоге
+            <span class="btn-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 9.5L9.5 2.5M9.5 2.5H4M9.5 2.5V8" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </a>
+        </div>
       </div>
     </div>
   </div>
