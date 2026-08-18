@@ -358,11 +358,11 @@
     .market-media img{ object-position: 50% 44%; }
     .market-scrim{
       background:
-        radial-gradient(120% 58% at 22% 34%, rgba(5,5,5,0.62), transparent 76%),
+        radial-gradient(125% 60% at 24% 33%, rgba(5,5,5,0.74), transparent 78%),
         linear-gradient(180deg,
-          rgba(5,5,5,0.60) 0%,
-          rgba(5,5,5,0.50) 44%,
-          rgba(5,5,5,0.38) 74%,
+          rgba(5,5,5,0.66) 0%,
+          rgba(5,5,5,0.56) 44%,
+          rgba(5,5,5,0.40) 74%,
           rgba(5,5,5,0.32) 100%);
     }
   }
