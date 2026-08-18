@@ -1194,8 +1194,13 @@
     <div class="market-frame reveal">
       <div class="market-media" aria-hidden="true">
         <picture class="block w-full h-full">
-          <source type="image/webp" srcset="images/market-lit.webp">
-          <img loading="lazy" decoding="async" src="images/market-lit.jpg" alt="" class="w-full h-full object-cover">
+          <source type="image/webp"
+                  sizes="(min-width: 1400px) 1320px, (min-width: 768px) calc(100vw - 80px), calc(100vw - 48px)"
+                  srcset="images/market-lit-1376.webp 1376w, images/market-lit-2752.webp 2752w">
+          <img loading="lazy" decoding="async"
+               sizes="(min-width: 1400px) 1320px, (min-width: 768px) calc(100vw - 80px), calc(100vw - 48px)"
+               srcset="images/market-lit-1376.jpg 1376w, images/market-lit-2752.jpg 2752w"
+               src="images/market-lit-1376.jpg" alt="" class="w-full h-full object-cover">
         </picture>
         <div class="market-scrim"></div>
       </div>
