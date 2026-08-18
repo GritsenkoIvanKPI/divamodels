@@ -24,13 +24,6 @@
 -->
 
 <style>
-  .af-badge{
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 8px 18px; border-radius: 999px;
-    border: 1px solid rgba(211,30,61,0.5);
-    font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 11px;
-    letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent);
-  }
   .af-field{ position: relative; }
   .af-field input[type="text"],
   .af-field input[type="tel"]{
@@ -58,10 +51,16 @@
   .af-pill.active{ color: #fff; background: var(--accent-dim); border-color: rgba(211,30,61,0.6); }
   .af-pill:focus-visible{ outline: 2px solid var(--accent); outline-offset: 2px; }
 
-  .af-check{ display: flex; align-items: flex-start; gap: 10px; cursor: pointer; }
+  /* Needs to outrank `.af-field label`, which otherwise forces display:block
+     here and drops the flex layout — gap included — on the floor. */
+  .af-field label.af-check,
+  .af-check{
+    display: flex; align-items: center; gap: 12px; cursor: pointer;
+    margin-bottom: 0;
+  }
   .af-check input{
     appearance: none; -webkit-appearance: none; flex-shrink: 0;
-    width: 18px; height: 18px; margin-top: 2px; border-radius: 5px;
+    width: 18px; height: 18px; border-radius: 5px;
     border: 1px solid var(--border); background: transparent; cursor: pointer;
     position: relative; transition: all 0.2s ease;
   }
@@ -87,7 +86,6 @@
   .af-submit{ width: 100%; margin-top: 28px; }
 
   @media (min-width: 768px){
-    #af-header h3{ margin-top: 10px; }
     #af-form{ margin-top: 22px; }
     .af-grid{
       display: grid;
@@ -118,8 +116,7 @@
 
 <div id="af-form-view">
   <div class="text-center" id="af-header">
-    <span class="af-badge">Заявка кандидата</span>
-    <h3 class="font-display text-3xl text-white mt-5">Стать <span class="text-[var(--accent)]">моделью</span></h3>
+    <h3 class="font-display text-3xl text-white">Стать <span class="text-[var(--accent)]">моделью</span></h3>
     <p class="text-[var(--text-muted)] text-sm leading-relaxed mt-3 max-w-sm md:max-w-xl mx-auto">
       Оставьте свои данные, и наш менеджер свяжется с вами в Telegram для обсуждения условий.
     </p>
