@@ -191,6 +191,10 @@
     .af-submit{ width: auto; margin-top: 0; flex-shrink: 0; }
   }
 
+
+  /* Ловушка для спам-ботов: человек этого поля не видит и не может заполнить. */
+  .af-hp{ position: absolute; left: -9999px; top: 0; width: 1px; height: 1px; overflow: hidden; }
+
   #af-success{ display: none; }
   #af-success.active{ display: block; }
   #af-form-view.hidden{ display: none; }
@@ -245,6 +249,12 @@
   </div>
 
   <form id="af-form" novalidate>
+      <div class="af-hp" aria-hidden="true">
+        <label>Не заполняйте это поле
+          <input type="text" name="website" id="af-website" tabindex="-1" autocomplete="off">
+        </label>
+      </div>
+
     <!-- Column 1 takes the three text fields, column 2 the three choice
          groups, so the whole form clears the fold on a laptop. Stacks back
          to one column below 768px, in source order. -->
@@ -314,6 +324,12 @@
         Отправить заявку
       </button>
     </div>
+
+      <div class="af-error" id="af-send-error" style="display:none; margin-top:14px;">
+        Не удалось отправить заявку. Попробуйте ещё раз или
+        <a href="https://t.me/divareviewsss" target="_blank" rel="noopener" style="text-decoration:underline;">напишите нам в Telegram</a> — ответим сразу.
+      </div>
+
   </form>
 </div>
 
@@ -415,28 +431,55 @@
       taboo18: pickedValue('taboo18')
     };
 
-    // ============================================================
-    // TODO: submit `data` to your real backend/CRM/webhook here, e.g.:
-    //   fetch('https://your-endpoint.example.com/leads', {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify(data)
-    //   });
-    // ============================================================
+    // ############################################################
+    // КУДА ОТПРАВЛЯЮТСЯ ЗАЯВКИ — одна строка под ваш хостинг:
+    //   PHP-хостинг (cPanel, Hostinger, Beget…):  'send.php'
+    //   Node / Vercel / Netlify:                  '/api/lead'
+    // ############################################################
+    var LEAD_ENDPOINT = '/api/lead';
 
-    // ############################################################
-    // PIXEL SLOT 4 of 4 — LEAD SUBMIT  (главная конверсия)
-    // ############################################################
-    // Fires once, right after a valid application is submitted.
-    //
-    //   Meta:   fbq('track', 'Lead');
-    //   TikTok: ttq.track('SubmitForm');
-    //   Google: gtag('event', 'conversion', {send_to: 'AW-XXX/YYY'});
-    //
-    // ############################################################
+    data.website = document.getElementById('af-website').value;   // honeypot
+    data.source = 'Рекламный лендинг';
+    data.page = window.location.href;
+    data.submittedAt = new Date().toLocaleString('ru-RU');
 
-    formView.classList.add('hidden');
-    successView.classList.add('active');
+    var sendError = document.getElementById('af-send-error');
+    var submitBtn = form.querySelector('button[type="submit"]');
+    var originalLabel = submitBtn.textContent;
+    sendError.style.display = 'none';
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Отправляем…';
+
+    fetch(LEAD_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    })
+    .then(function(res){ return res.ok ? res.json() : Promise.reject(res.status); })
+    .then(function(result){
+      if(!result || !result.ok) return Promise.reject('rejected');
+
+      // ############################################################
+      // PIXEL SLOT 4 of 4 — LEAD SUBMIT  (главная конверсия)
+      // ############################################################
+      // Fires once, right after a valid application is submitted.
+      //
+      //   Meta:   fbq('track', 'Lead');
+      //   TikTok: ttq.track('SubmitForm');
+      //   Google: gtag('event', 'conversion', {send_to: 'AW-XXX/YYY'});
+      //
+      // ############################################################
+
+      formView.classList.add('hidden');
+      successView.classList.add('active');
+    })
+    .catch(function(){
+      // Ничего не притворяемся: заявка не ушла. Показываем это и даём прямой
+      // контакт, чтобы лид не потерялся, и разблокируем кнопку для повтора.
+      sendError.style.display = 'block';
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalLabel;
+    });
   });
 })();
 </script>
