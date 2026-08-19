@@ -51,7 +51,7 @@
       applyModalContent.innerHTML = await res.text();
       runInjectedScripts(applyModalContent);
     }catch(err){
-      applyModalContent.innerHTML = '<div class="py-20 text-center"><p class="text-[var(--text-dim)] text-sm">Не удалось загрузить форму. Напишите нам напрямую:</p><a href="https://t.me/divareviewsss" target="_blank" rel="noopener" class="btn btn-primary mt-6 inline-flex">Написать в Telegram</a></div>';
+      applyModalContent.innerHTML = '<div class="py-20 text-center"><p class="text-[var(--text-dim)] text-sm">Не удалось загрузить форму. Напишите нам напрямую:</p><a href="https://t.me/diva_modelss" target="_blank" rel="noopener" class="btn btn-primary mt-6 inline-flex">Написать в Telegram</a></div>';
     }
   }
 
