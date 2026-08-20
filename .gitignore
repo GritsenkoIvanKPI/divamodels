@@ -1,3 +1,8 @@
 node_modules/
 .DS_Store
 temporary screenshots/
+
+# Секреты Telegram-бота — токен НИКОГДА не должен попасть в репозиторий
+telegram-config.php
+.env
+.env.local

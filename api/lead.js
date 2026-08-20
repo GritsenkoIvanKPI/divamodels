@@ -36,9 +36,32 @@ const escapeHtml = (v) => String(v == null ? '' : v)
 // обрезаем всё, что пришло из браузера: и от случайных простыней, и от мусора
 const clean = (v, max = 200) => String(v == null ? '' : v).trim().slice(0, max);
 
+/* Простая защита от потока заявок с одного адреса. Живёт в памяти инстанса,
+   поэтому это лучшее из возможного без базы, а не строгая гарантия — но залить
+   группу сотней сообщений за минуту уже не даст. */
+const HITS = new Map();
+function rateLimited(ip, max = 5, windowMs = 10 * 60 * 1000) {
+  const now = Date.now();
+  const recent = (HITS.get(ip) || []).filter((t) => now - t < windowMs);
+  if (recent.length >= max) { HITS.set(ip, recent); return true; }
+  recent.push(now);
+  HITS.set(ip, recent);
+  if (HITS.size > 5000) HITS.clear();          // страховка от роста памяти
+  return false;
+}
+
 module.exports = async (req, res) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+
   if (req.method !== 'POST') {
     res.status(405).json({ ok: false, error: 'method_not_allowed' });
+    return;
+  }
+
+  const ip = (req.headers['x-forwarded-for'] || '').split(',')[0].trim()
+             || req.socket?.remoteAddress || 'unknown';
+  if (rateLimited(ip)) {
+    res.status(429).json({ ok: false, error: 'too_many_requests' });
     return;
   }
 
