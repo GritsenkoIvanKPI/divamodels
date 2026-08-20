@@ -79,11 +79,30 @@ export default {
 
     // предварительный запрос браузера перед кросс-доменным POST
     if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
+
+    // Проверка настроек: откройте адрес воркера в браузере и увидите, какие
+    // переменные заданы. Значения не показываются — только «есть / нет».
+    if (request.method === 'GET') {
+      return json({
+        ok: true,
+        worker: 'diva-leads',
+        config: {
+          TELEGRAM_BOT_TOKEN: env.TELEGRAM_BOT_TOKEN ? 'задан' : 'НЕ ЗАДАН',
+          TELEGRAM_CHAT_ID:   env.TELEGRAM_CHAT_ID   ? String(env.TELEGRAM_CHAT_ID) : 'НЕ ЗАДАН',
+          ALLOWED_ORIGINS:    env.ALLOWED_ORIGINS    || 'не задан (разрешены любые сайты)',
+        },
+        hint: 'Если что-то «НЕ ЗАДАН» — добавьте в Settings → Variables and Secrets и нажмите Deploy ещё раз.',
+      }, 200, cors);
+    }
+
     if (request.method !== 'POST') return json({ ok: false, error: 'method_not_allowed' }, 405, cors);
 
-    if (!env.TELEGRAM_BOT_TOKEN || !env.TELEGRAM_CHAT_ID) {
-      console.error('TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID не заданы в секретах воркера');
-      return json({ ok: false, error: 'not_configured' }, 500, cors);
+    const missingEnv = [];
+    if (!env.TELEGRAM_BOT_TOKEN) missingEnv.push('TELEGRAM_BOT_TOKEN');
+    if (!env.TELEGRAM_CHAT_ID)   missingEnv.push('TELEGRAM_CHAT_ID');
+    if (missingEnv.length) {
+      console.error('не заданы переменные:', missingEnv.join(', '));
+      return json({ ok: false, error: 'not_configured', missing: missingEnv }, 500, cors);
     }
 
     const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
