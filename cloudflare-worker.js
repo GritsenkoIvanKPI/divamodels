@@ -55,8 +55,12 @@ function rateLimited(ip, max = 5, windowMs = 10 * 60 * 1000) {
 }
 
 function corsHeaders(request, env) {
-  const origin = request.headers.get('Origin') || '';
-  const allowed = (env.ALLOWED_ORIGINS || '').split(',').map((s) => s.trim()).filter(Boolean);
+  // Браузер присылает Origin строго без хвостового слэша: «https://сайт.com».
+  // В настройках его легко вписать со слэшем, и тогда адреса не совпадут, а
+  // браузер молча заблокирует ответ. Поэтому сравниваем нормализованно.
+  const strip = (v) => String(v || '').trim().replace(/\/+$/, '');
+  const origin = strip(request.headers.get('Origin'));
+  const allowed = (env.ALLOWED_ORIGINS || '').split(',').map(strip).filter(Boolean);
   const allow = allowed.length === 0 ? '*' : (allowed.includes(origin) ? origin : allowed[0]);
   return {
     'Access-Control-Allow-Origin': allow,
