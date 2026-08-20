@@ -26,33 +26,52 @@
 
 ---
 
-## Что осталось сделать — один шаг
+## Что осталось сделать
 
-### Если сайт на Vercel (сейчас так)
+Сайт будет лежать на статике (GitHub Pages + домен). Там **не выполняется ни
+PHP, ни Node** — значит, `send.php` и `api/lead.js` там просто не запустятся.
+Поэтому нужен маленький посредник, который примет заявку и сходит в Telegram.
 
-1. Vercel → проект → **Settings → Environment Variables**
-2. Добавить две переменные (значения — из сообщения BotFather и id группы):
+### Вариант А — Cloudflare Worker (рекомендуется)
 
-   | Name | Value |
-   |---|---|
-   | `TELEGRAM_BOT_TOKEN` | токен вида `7216…:AAH…` |
-   | `TELEGRAM_CHAT_ID` | `-1002276800723` |
+Бесплатно, 5 минут, и работает с **любого** хостинга — хоть GitHub Pages,
+хоть обычный хостинг. Токен лежит в секретах Cloudflare, в браузер не
+попадает.
 
-3. **Redeploy** — без него переменные не подхватятся.
+1. `dash.cloudflare.com` → **Workers & Pages** → Create → Worker → Deploy
+2. **Edit code** → вставить весь `cloudflare-worker.js` → Deploy
+3. **Settings → Variables and Secrets** → добавить:
 
-Менять в коде ничего не нужно: `LEAD_ENDPOINT` уже стоит `'/api/lead'`.
+   | Имя | Тип | Значение |
+   |---|---|---|
+   | `TELEGRAM_BOT_TOKEN` | Secret | токен от BotFather |
+   | `TELEGRAM_CHAT_ID` | Secret | `-1002276800723` |
+   | `ALLOWED_ORIGINS` | Text | `https://ваш-домен.com,https://www.ваш-домен.com` |
 
-### Если переедете на PHP-хостинг
+4. Скопировать адрес воркера и вписать его **в двух файлах** —
+   `apply.html` и `apply-form.html`:
 
-1. Скопировать `telegram-config.example.php` → `telegram-config.php`,
-   вписать токен и id группы. Файл не коммитить.
+   ```js
+   var LEAD_ENDPOINT = 'https://ваш-воркер.workers.dev';
+   ```
+
+После этого архив с сайтом можно заливать куда угодно — форма будет работать.
+
+### Вариант Б — если хостинг всё-таки с PHP
+
+1. `telegram-config.example.php` → скопировать в `telegram-config.php`,
+   вписать токен и id группы. Этот файл **не коммитить**.
 2. Положить `send.php` и `telegram-config.php` в корень сайта.
-3. В `apply.html` и `apply-form.html` заменить одну строку:
+3. В `apply.html` и `apply-form.html`:
    ```js
    var LEAD_ENDPOINT = 'send.php';
    ```
 
----
+### Что заливать на статический хостинг
+
+Нужны: все `.html`, папки `assets/` и `images/`.
+Не нужны и не работают там: `send.php`, `api/`, `telegram-config*.php`,
+`serve.mjs`, `screenshot.mjs`, `node_modules/`, `*.md`.
 
 ## Что придёт в группу
 
