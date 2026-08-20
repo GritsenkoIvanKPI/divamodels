@@ -291,16 +291,53 @@
     };
 
     // ############################################################
-    // КУДА ОТПРАВЛЯЮТСЯ ЗАЯВКИ — одна строка под ваш хостинг:
-    //   PHP-хостинг (cPanel, Hostinger, Beget…):  'send.php'
-    //   Node / Vercel / Netlify:                  '/api/lead'
+    // TELEGRAM — куда уходят заявки
     // ############################################################
-    var LEAD_ENDPOINT = '/api/lead';
+    // ВНИМАНИЕ: токен лежит прямо здесь, в файле страницы. Значит, его
+    // видно любому, кто откроет исходный код сайта. Это осознанный
+    // выбор ради простоты — без отдельного сервера иначе никак.
+    //
+    // Если бот начнёт слать спам или что-то пойдёт не так:
+    //   1. @BotFather → /revoke → выбрать бота → получить новый токен
+    //   2. вписать новый токен НИЖЕ, в ДВУХ файлах:
+    //      apply.html  и  apply-form.html
+    // ############################################################
+    var TG_TOKEN = '7216276855:AAHiVB9OTH9nmmyHQVixHuI25P5iyHu6wds';
+    var TG_CHAT  = '-1002276800723';
 
-    data.website = document.getElementById('af-website').value;   // honeypot
-    data.source = 'Попап на сайте';
-    data.page = window.location.href;
-    data.submittedAt = new Date().toLocaleString('ru-RU');
+    // Ловушка для спам-ботов: поле спрятано от людей. Если заполнено —
+    // молча показываем «успех», в Telegram ничего не уходит.
+    if(document.getElementById('af-website').value.trim()){
+      formView.classList.add('hidden');
+      successView.classList.add('active');
+      return;
+    }
+
+    var TG_LABELS = {
+      experience: { none: 'Нет опыта', model: 'Модель', operator: 'Оператор' },
+      taboo18:    { yes: 'Да', no: 'Нет' }
+    };
+    function tgEsc(v){
+      return String(v == null ? '' : v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+    function tgLabel(group, value){
+      return (TG_LABELS[group] && TG_LABELS[group][value]) || value;
+    }
+
+    var tgText = [
+      '\uD83D\uDD25 <b>Новая заявка</b>',
+      '',
+      '<b>Имя:</b> ' + tgEsc(data.name),
+      '<b>Телефон:</b> ' + tgEsc(data.phone),
+      '<b>Telegram:</b> ' + tgEsc(data.telegram),
+      '<b>Возраст:</b> ' + tgEsc(data.age),
+      '<b>Опыт:</b> ' + tgEsc(tgLabel('experience', data.experience)),
+      '<b>Контент 18+:</b> ' + tgEsc(tgLabel('taboo18', data.taboo18)),
+      '',
+      '<i>Откуда:</i> Попап на сайте',
+      '<i>Когда:</i> ' + tgEsc(new Date().toLocaleString('ru-RU')),
+      '<i>Страница:</i> ' + tgEsc(window.location.href)
+    ].join('\n');
 
     var sendError = document.getElementById('af-send-error');
     var submitBtn = form.querySelector('button[type="submit"]');
@@ -309,12 +346,17 @@
     submitBtn.disabled = true;
     submitBtn.textContent = 'Отправляем…';
 
-    fetch(LEAD_ENDPOINT, {
+    fetch('https://api.telegram.org/bot' + TG_TOKEN + '/sendMessage', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
+      body: JSON.stringify({
+        chat_id: TG_CHAT,
+        text: tgText,
+        parse_mode: 'HTML',
+        disable_web_page_preview: true
+      })
     })
-    .then(function(res){ return res.ok ? res.json() : Promise.reject(res.status); })
+    .then(function(res){ return res.json(); })
     .then(function(result){
       if(!result || !result.ok) return Promise.reject('rejected');
 
@@ -324,7 +366,6 @@
       //   fbq('track', 'Lead');
       //   ttq.track('SubmitForm');
       // ============================================================
-
       formView.classList.add('hidden');
       successView.classList.add('active');
     })
